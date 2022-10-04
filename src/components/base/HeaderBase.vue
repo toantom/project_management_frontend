@@ -23,9 +23,15 @@
         />
       </div>
       <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser">
-        <li><div class="dropdown-item">New project...</div></li>
-        <li><div class="dropdown-item">Settings</div></li>
-        <li><div class="dropdown-item">Profile</div></li>
+        <li><div class="dropdown-item">My Page</div></li>
+        <li>
+          <div
+            class="dropdown-item"
+            @click="$router.push({ path: '/account' })"
+          >
+            My Account
+          </div>
+        </li>
         <li><hr class="dropdown-divider" /></li>
         <li>
           <div class="dropdown-item" @click="showModalLogOut">Sign out</div>
@@ -33,37 +39,33 @@
       </ul>
     </div>
   </header>
-  <div class="l-navbar" id="nav-bar">
-    <nav class="nav">
+  <div class="l-navbar" id="nav-sidebar">
+    <nav class="nav-sidebar">
       <div>
-        <a href="#" class="nav_logo">
-          <i class="bx bx-layer nav_logo-icon"></i>
-          <span class="nav_logo-name">BBBootstrap</span>
-        </a>
         <div class="nav_list">
-          <a href="#" class="nav_link active">
-            <i class="bx bx-grid-alt nav_icon"></i>
+          <a href="#" class="nav_link-sidebar active">
+            <i class="bx bx-info-circle nav_icon-sidebar"></i>
+            <span class="nav_name">Overview</span>
+          </a>
+          <a href="#" class="nav_link-sidebar">
+            <i class="bx bx-grid-alt nav_icon-sidebar"></i>
             <span class="nav_name">Dashboard</span>
           </a>
-          <a href="#" class="nav_link">
-            <i class="bx bx-user nav_icon"></i>
-            <span class="nav_name">Users</span>
+          <a href="#" class="nav_link-sidebar">
+            <i class="bx bx-book-content nav_icon-sidebar"></i>
+            <span class="nav_name">Backlogs</span>
           </a>
-          <a href="#" class="nav_link">
-            <i class="bx bx-message-square-detail nav_icon"></i>
-            <span class="nav_name">Messages</span>
+          <a href="#" class="nav_link-sidebar">
+            <i class="bx bx-briefcase-alt-2 nav_icon-sidebar"></i>
+            <span class="nav_name">Work packages</span>
           </a>
-          <a href="#" class="nav_link">
-            <i class="bx bx-bookmark nav_icon"></i>
-            <span class="nav_name">Bookmark</span>
+          <a href="#" class="nav_link-sidebar">
+            <i class="bx bxs-book-reader nav_icon-sidebar"></i>
+            <span class="nav_name">Wiki</span>
           </a>
-          <a href="#" class="nav_link">
-            <i class="bx bx-folder nav_icon"></i>
-            <span class="nav_name">Files</span>
-          </a>
-          <a href="#" class="nav_link">
-            <i class="bx bx-bar-chart-alt-2 nav_icon"></i>
-            <span class="nav_name">Stats</span>
+          <a href="#" class="nav_link-sidebar">
+            <i class="bx bx-group nav_icon-sidebar"></i>
+            <span class="nav_name">Members</span>
           </a>
         </div>
       </div>
@@ -90,10 +92,10 @@ export default defineComponent({
       this.showModalLogout = true;
     },
     showNavbar(e: { target: HTMLElement }) {
-      const nav = document.getElementById("nav-bar"),
-        bodypd = document.getElementById("app"),
+      const nav = document.getElementById("nav-sidebar"),
+        bodypd = document.getElementById("body-pd"),
         headerpd = document.getElementById("header");
-      nav?.classList.toggle("show");
+      nav?.classList.toggle("show-sidebar");
       // change icon
       e.target.classList.toggle("bx-x");
       // add padding to body
@@ -105,21 +107,20 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" scoped>
-$header-height: 3rem;
-$nav-width: 68px;
-$first-color: #4723d9;
-$first-color-light: #afa5d9;
-$white-color: #f7f6fb;
-$body-font: "Nunito", sans-serif;
-$normal-font-size: 1rem;
-$z-fixed: 100;
-a {
-  text-decoration: none;
+<style lang="scss">
+:root {
+  --header-height: 3rem;
+  --nav-width: 68px;
+  --first-color: #4723d9;
+  --first-color-light: #afa5d9;
+  --white-color: #f7f6fb;
+  --body-font: "Nunito", sans-serif;
+  --normal-font-size: 1rem;
+  --z-fixed: 100;
 }
 .header {
   width: 100%;
-  height: $header-height;
+  height: var(--header-height);
   position: fixed;
   top: 0;
   left: 0;
@@ -127,102 +128,113 @@ a {
   align-items: center;
   justify-content: space-between;
   padding: 0 1rem;
-  background-color: $white-color;
-  z-index: $z-fixed;
+  background-color: var(--white-color);
+  z-index: var(--z-fixed);
   transition: 0.5s;
+  .dropdown-item {
+    cursor: pointer;
+  }
 }
 .header_toggle {
-  color: var($first-color);
+  color: var(--first-color);
   font-size: 1.5rem;
   cursor: pointer;
+}
+.header_img {
+  width: 35px;
+  height: 35px;
+  display: flex;
+  justify-content: center;
+  border-radius: 50%;
+  overflow: hidden;
+}
+.header_img img {
+  width: 40px;
 }
 .l-navbar {
   position: fixed;
   top: 0;
   left: -30%;
-  width: $nav-width;
+  width: var(--nav-width);
   height: 100vh;
-  background-color: $first-color;
+  background-color: var(--first-color);
   padding: 0.5rem 1rem 0 0;
   transition: 0.5s;
-  z-index: $z-fixed;
+  z-index: var(--z-fixed);
 }
-.nav {
+.nav-sidebar {
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   overflow: hidden;
 }
-.nav_logo,
-.nav_link {
+.nav_link-sidebar {
   display: grid;
   grid-template-columns: max-content max-content;
   align-items: center;
   column-gap: 1rem;
   padding: 0.5rem 0 0.5rem 1.5rem;
 }
-.nav_logo {
-  margin-bottom: 2rem;
-}
-.nav_logo-icon {
-  font-size: 1.25rem;
-  color: $white-color;
-}
-.nav_logo-name {
-  color: $white-color;
-  font-weight: 700;
-}
-.nav_link {
+.nav_link-sidebar {
   position: relative;
-  color: $first-color-light;
+  color: var(--first-color-light);
   margin-bottom: 1.5rem;
   transition: 0.3s;
 }
-.nav_link:hover {
-  color: $white-color;
+.nav_link-sidebar:hover {
+  color: var(--white-color);
 }
-.nav_icon {
+.nav_icon-sidebar {
   font-size: 1.25rem;
 }
-.show {
+.show-sidebar {
   left: 0;
 }
 .body-pd {
-  padding-left: calc($nav-width + 1rem);
+  padding-left: calc(var(--nav-width) + 1rem);
 }
-.active {
-  color: $white-color;
+
+.nav_link-sidebar.active {
+  color: var(--white-color);
 }
-.active::before {
+.nav_link-sidebar.active::before {
   content: "";
   position: absolute;
   left: 0;
   width: 2px;
   height: 32px;
-  background-color: $white-color;
+  background-color: var(--white-color);
 }
-.dropdown-item {
-  cursor: pointer;
+.height-100 {
+  height: 100vh;
 }
+
 @media screen and (min-width: 768px) {
   body {
-    margin: calc($header-height + 1rem) 0 0 0;
-    padding-left: calc($nav-width + 2rem);
+    margin: calc(var(--header-height) + 1rem) 0 0 0 !important;
+    padding-left: calc(var(--nav-width) + 2rem);
   }
   .header {
-    height: calc($header-height + 1rem);
-    padding: 0 2rem 0 calc($nav-width + 2rem);
+    height: calc(var(--header-height) + 1rem);
+    padding: 0 2rem 0 calc(var(--nav-width) + 2rem);
+  }
+  .header_img {
+    width: 40px;
+    height: 40px;
+  }
+  .header_img img {
+    width: 45px;
   }
   .l-navbar {
     left: 0;
     padding: 1rem 1rem 0 0;
   }
-  .show {
-    width: calc($nav-width + 156px);
+  .show-sidebar {
+    width: calc(var(--nav-width) + 156px);
   }
   .body-pd {
-    padding-left: calc($nav-width + 188px);
+    padding-left: calc(var(--nav-width) + 188px);
   }
 }
 </style>

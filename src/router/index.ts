@@ -15,17 +15,17 @@ const routes = [
       {
         path: "/login",
         name: "Login",
-        component: () => import("../views/LoginPage.vue"),
+        component: () => import("../views/auth/LoginPage.vue"),
       },
       {
         path: "/signup",
         name: "Signup",
-        component: () => import("../views/SignUp.vue"),
+        component: () => import("../views/auth/SignUp.vue"),
       },
       {
         path: "/forgot-password",
         name: "ForgotPassword",
-        component: () => import("../views/ForgotPassword.vue"),
+        component: () => import("../views/auth/ForgotPassword.vue"),
       },
     ],
   },
@@ -38,6 +38,11 @@ const routes = [
         path: "/",
         name: "Homepage",
         component: HomePage,
+      },
+      {
+        path: "/account",
+        name: "MyAccount",
+        component: () => import("../views/my_info/AccountView.vue"),
       },
     ],
     meta: {

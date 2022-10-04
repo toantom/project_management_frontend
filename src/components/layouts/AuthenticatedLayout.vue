@@ -1,7 +1,7 @@
 <template>
   <header-base />
-  <div class="height-100 bg-light">
-    <!--    <router-view />-->
+  <div class="height-100">
+    <router-view />
   </div>
 </template>
 
