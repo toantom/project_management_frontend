@@ -6,9 +6,3 @@ export interface AuthState {
   user: object;
   isAuthenticated: boolean;
 }
-
-export interface Toast {
-  title: string;
-  message: string;
-  type: string;
-}

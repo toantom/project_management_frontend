@@ -4,9 +4,6 @@ export const SET_ERROR = "SET_ERROR";
 export const SET_AUTH = "SET_AUTH";
 export const AUTH_LOGOUT = "AUTH_LOGOUT";
 
-export const SET_TOAST = "SET_TOAST";
-export const GET_TOAST = "GET_TOAST";
-
 // // candidate
 // export const CANDIDATE_CONDITION_CHANGED = "CANDIDATE_CONDITION_CHANGED";
 // export const CANDIDATE_SEARCH_COUNT_CHANGED = "CANDIDATE_SEARCH_COUNT_CHANGED";
