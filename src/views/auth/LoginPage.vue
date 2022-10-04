@@ -73,6 +73,7 @@ import ButtonBase from "@/components/base/ButtonBase";
 import { API_LOGIN } from "@/common/api.constants";
 // service
 import AuthService from "@/services/auth.service";
+import { useToast } from "vue-toastification";
 
 export default defineComponent({
   name: "LoginPage",
@@ -101,16 +102,17 @@ export default defineComponent({
         email: this.email,
         password: this.password,
       };
+      const toast = useToast();
       this.$store
         .dispatch(API_LOGIN, payload)
         .then(() => {
           this.error = "";
+          toast.success("Login Successful");
           AuthService.getAccountMe().then(() =>
             this.$router.push({ name: "Homepage" })
           );
         })
         .catch((response) => {
-          console.log(response);
           this.error = response.data.message;
         });
     },
@@ -144,9 +146,6 @@ export default defineComponent({
         color: var(--bs-link-hover-color);
       }
     }
-  }
-  .required-input {
-    color: var(--bs-danger);
   }
 }
 </style>
