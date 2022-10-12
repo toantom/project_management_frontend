@@ -64,7 +64,7 @@ export default defineComponent({
     transform: scaleX(1);
   }
   100% {
-    top: 0%;
+    top: 0;
   }
 }
 

@@ -1,5 +1,4 @@
 /* eslint-disable */
-import { store } from "@/store";
 // types and interface
 import { AxiosError, AxiosResponse } from "axios";
 // Services

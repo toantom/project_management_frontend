@@ -5,6 +5,7 @@ import { Module } from "vuex";
 const state: Loading = {
   isLoading: false,
 };
+// eslint-disable-next-line
 const loading: Module<Loading, any> = {
   state,
   mutations,

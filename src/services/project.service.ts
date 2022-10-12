@@ -6,6 +6,7 @@ import ApiService from "@/common/api.service";
 import { API_GET_LIST_PROJECTS } from "@/common/api.constants";
 
 export default {
+  // eslint-disable-next-line
   getListProjects(page = 1, limit = 15): Promise<any | void> {
     return ApiService.get(API_GET_LIST_PROJECTS, {
       params: { page, limit },
