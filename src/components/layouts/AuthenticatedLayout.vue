@@ -1,6 +1,6 @@
 <template>
   <header-base />
-  <div class="height-100">
+  <div id="body-pd" class="height-100">
     <router-view />
   </div>
 </template>

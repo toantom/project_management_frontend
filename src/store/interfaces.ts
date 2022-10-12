@@ -6,3 +6,7 @@ export interface AuthState {
   user: object;
   isAuthenticated: boolean;
 }
+
+export interface Loading {
+  isLoading: boolean;
+}

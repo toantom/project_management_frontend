@@ -16,6 +16,9 @@ import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "LoadingBase",
+  data() {
+    return {};
+  },
 });
 </script>
 
@@ -23,9 +26,9 @@ export default defineComponent({
 .overlay {
   left: 0;
   top: 0;
-  width: 100%;
-  height: 100%;
-  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1000;
   background: #c2c2c2;
 }
 .container {
