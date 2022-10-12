@@ -101,7 +101,7 @@ export default defineComponent({
       // add padding to body
       bodypd?.classList.toggle("body-pd");
       // add padding to header
-      headerpd?.classList.toggle("body-pd");
+      headerpd?.classList.toggle("header-pd");
     },
   },
 });
@@ -181,6 +181,7 @@ export default defineComponent({
   color: var(--first-color-light);
   margin-bottom: 1.5rem;
   transition: 0.3s;
+  text-decoration: none;
 }
 .nav_link-sidebar:hover {
   color: var(--white-color);
@@ -192,6 +193,9 @@ export default defineComponent({
   left: 0;
 }
 .body-pd {
+  padding-left: calc(var(--nav-width) + 1rem);
+}
+.header-pd {
   padding-left: calc(var(--nav-width) + 1rem);
 }
 
@@ -211,13 +215,13 @@ export default defineComponent({
 }
 
 @media screen and (min-width: 768px) {
-  body {
+  #body-pd {
     margin: calc(var(--header-height) + 1rem) 0 0 0 !important;
     padding-left: calc(var(--nav-width) + 2rem);
   }
   .header {
     height: calc(var(--header-height) + 1rem);
-    padding: 0 2rem 0 calc(var(--nav-width) + 2rem);
+    padding: 0 2rem 0 calc(var(--nav-width) + 1rem);
   }
   .header_img {
     width: 40px;
@@ -233,8 +237,9 @@ export default defineComponent({
   .show-sidebar {
     width: calc(var(--nav-width) + 156px);
   }
-  .body-pd {
-    padding-left: calc(var(--nav-width) + 188px);
+  .body-pd,
+  .header-pd {
+    padding-left: calc(var(--nav-width) + 165px) !important;
   }
 }
 </style>

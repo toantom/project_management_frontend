@@ -36,16 +36,30 @@
           </div>
         </div>
         <div class="d-flex justify-content-between">
+          <button
+            class="btn btn-primary"
+            type="button"
+            disabled
+            v-if="isLogging"
+          >
+            <span
+              class="spinner-border spinner-border-sm"
+              role="status"
+              aria-hidden="true"
+            ></span>
+            <span class="visually-hidden">Loading...</span>
+          </button>
           <button-base
             :type="'button'"
             :class="{ 'btn-primary': disabled, 'btn-secondary': !disabled }"
             :label="'Submit'"
             @click="submit"
             :disabled="!disabled"
+            v-else
           />
           <div
             class="forgot-password"
-            @click="this.$router.push({ name: 'forgotPassword' })"
+            @click="this.$router.push({ name: 'ForgotPassword' })"
           >
             Forgot your password ?
           </div>
@@ -86,6 +100,7 @@ export default defineComponent({
       password: "",
       disabled: false,
       error: "",
+      isLogging: false,
     };
   },
   watch: {
@@ -98,6 +113,7 @@ export default defineComponent({
   },
   methods: {
     submit() {
+      this.isLogging = true;
       const payload = {
         email: this.email,
         password: this.password,
@@ -113,21 +129,30 @@ export default defineComponent({
           );
         })
         .catch((response) => {
+          this.isLogging = false;
           this.error = response.data.message;
         });
     },
+  },
+  unmounted() {
+    this.isLogging = false;
   },
 });
 </script>
 
 <style lang="scss" scoped>
 #login-form {
+  height: 100vh;
+  background-color: rgb(237, 237, 237);
   .form {
     width: 511px;
-    margin: 50px auto 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
     padding: 30px 20px;
     background-color: #f8f8f8;
     border: 1px solid #eaeaea;
+    transform: translate(-50%, -50%);
     .title {
       color: #333333;
       font-weight: bold;

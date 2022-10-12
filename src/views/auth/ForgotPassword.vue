@@ -37,13 +37,18 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-#login-form {
+#forgot-form {
+  height: 100vh;
+  background-color: rgb(237, 237, 237);
   .form {
     width: 511px;
-    margin: 50px auto 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
     padding: 30px 20px;
     background-color: #f8f8f8;
     border: 1px solid #eaeaea;
+    transform: translate(-50%, -50%);
     .title {
       color: #333333;
       font-weight: bold;

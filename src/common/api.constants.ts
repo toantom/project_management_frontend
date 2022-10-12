@@ -4,3 +4,7 @@ export const API_REGISTER = "/auth/register";
 export const API_ACCOUNT_ME = "/user";
 export const API_GET_INFO_ACCOUNT = "/account/<user_id>";
 export const API_UPDATE_INFO_ACCOUNT = "/account/<user_id>";
+export const API_GET_LIST_PROJECTS = "/projects";
+export const API_CREATE_PROJECT = "/projects";
+export const API_UPDATE_PROJECT = "/project/<project_id>";
+export const API_DELETE_PROJECT = "/project/<project_id>";
