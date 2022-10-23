@@ -17,6 +17,12 @@
             :classes="['btn-primary']"
             :label="'Submit'"
           />
+          <div
+            class="forgot-password"
+            @click="this.$router.push({ name: 'Login' })"
+          >
+            Back to login
+          </div>
         </div>
       </form>
     </div>
@@ -39,7 +45,6 @@ export default defineComponent({
 <style lang="scss" scoped>
 #forgot-form {
   height: 100vh;
-  background-color: rgb(237, 237, 237);
   .form {
     width: 511px;
     position: absolute;
@@ -57,6 +62,15 @@ export default defineComponent({
     }
     @media only screen and (max-width: 42.4375em) {
       width: 100%;
+    }
+    .forgot-password {
+      cursor: pointer;
+      color: var(--bs-link-color);
+
+      &:hover {
+        text-decoration: underline;
+        color: var(--bs-link-hover-color);
+      }
     }
   }
 }

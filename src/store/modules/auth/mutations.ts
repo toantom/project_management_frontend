@@ -25,7 +25,7 @@ const mutations: MutationTree<AuthState> & AuthMutationsType = {
   },
   [SET_ERROR](state, error) {
     error = error.response;
-    state.errors = error;
+    state.errors = error.data;
 
     // get status from error
     const status = (error && error.status) || 200;
@@ -33,8 +33,8 @@ const mutations: MutationTree<AuthState> & AuthMutationsType = {
     if (status === 401) store.commit(AUTH_LOGOUT);
   },
   [SET_AUTH](state, data) {
-    state.user = data;
-    UserService.saveUser(data);
+    state.user = data.data;
+    UserService.saveUser(data.data);
   },
   [AUTH_LOGOUT](state) {
     state.errors = "";

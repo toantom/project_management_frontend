@@ -1,25 +1,26 @@
-$header-bg-color: #1A67A3;
-$header-border-bottom-width: 0;
-$header-border-bottom-color: #1A67A3;
-$default-text-color: #333333;
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+}
 
-$header-height: 3rem;
-$nav-width: 68px;
-$first-color: #4723d9;
-$first-color-light: #afa5d9;
-$white-color: #f7f6fb;
-$body-font: "Nunito", sans-serif;
-$normal-font-size: 1rem;
-$z-fixed: 100;
+body {
+  box-sizing: border-box;
+}
 #app {
-  height: 100vh;
+  background-color: rgb(237 237 237);
 }
 #body-pd {
   transition: 0.5s;
-  background-color: rgb(237 237 237) !important;
-  margin: calc(3rem + 1rem) 0 0 0 !important;
+  min-height: calc(100vh - 64px);
+  margin: 3rem 0 0 0;
   a {
     text-decoration: none;
+  }
+  @media (min-height: 768px) {
+    margin: 4rem 0 0 0;
   }
 }
 .form--separator {

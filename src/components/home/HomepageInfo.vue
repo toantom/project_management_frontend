@@ -14,10 +14,11 @@
         </li>
       </ul>
       <button-base
-        v-if="viewAllProjects"
+        v-if="viewAll"
         :type="'button'"
         :label="'View all projects'"
         :classes="['btn-outline-primary', 'mt-5']"
+        @click="$emit('view-all')"
       />
     </div>
   </div>
@@ -35,7 +36,7 @@ export default defineComponent({
     infoTitle: String,
     infoClass: String,
     infoList: Object,
-    viewAllProjects: Boolean,
+    viewAll: Boolean,
   },
 });
 </script>

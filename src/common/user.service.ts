@@ -1,14 +1,20 @@
 const USER_INFO = "USER_INFO";
-import { USER_TYPE_ADMIN } from "@/common/constants";
+import {
+  USER_ROLE_ADMIN,
+  USER_ROLE_MANAGER,
+  USER_TYPE_ADMIN,
+} from "@/common/constants";
 
 interface User {
+  created_at: string;
   email: string;
-  first_name: string;
-  header_picture: string;
-  last_name: string;
-  profile_picture: string;
-  type: number | string;
-  user_id: number | string;
+  email_verified_at: string;
+  id: number;
+  name: string;
+  role: number;
+  status: number;
+  type: number;
+  updated_at: string;
 }
 
 export const getUser = (): User => {
@@ -19,8 +25,15 @@ export const saveUser = (user: string): void => {
   window.localStorage.setItem(USER_INFO, JSON.stringify(user));
 };
 
-export const isAdmin = (): boolean => {
+export const isAdminType = (): boolean => {
   return getUser().type === USER_TYPE_ADMIN;
 };
 
-export default { getUser, saveUser, isAdmin };
+export const isManagerRole = (): boolean => {
+  return getUser().role === USER_ROLE_MANAGER;
+};
+export const isAdminRole = (): boolean => {
+  return getUser().role === USER_ROLE_ADMIN;
+};
+
+export default { getUser, saveUser, isAdminType, isManagerRole, isAdminRole };

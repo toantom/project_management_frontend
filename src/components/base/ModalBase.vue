@@ -28,7 +28,6 @@
             <slot></slot>
           </div>
           <div class="modal-footer">
-            <slot name="zoomAvatar"></slot>
             <button
               v-if="secondLabel"
               type="button"
@@ -40,11 +39,7 @@
             <button
               v-if="primaryLabel"
               type="button"
-              :class="[
-                active ? 'btn-primary' : 'btn-secondary',
-                'btn fw-bold',
-                isDeleteJob ? 'btn-danger' : 'btn-primary',
-              ]"
+              :class="[active ? 'btn-primary' : 'btn-secondary', 'btn fw-bold']"
               :disabled="!active"
               @click="$emit('ok')"
             >
@@ -77,9 +72,7 @@ export default defineComponent({
     active: { type: Boolean, default: true },
     open: { type: Boolean, default: false },
     titleSize: { type: String, default: "" },
-    isDeleteJob: { type: Boolean, default: false },
     isCancel: { type: Boolean, default: true },
-    isRecommendCompany: { type: Boolean, default: false },
   },
   emits: [
     "update:open",
@@ -95,7 +88,6 @@ export default defineComponent({
   setup(props, { emit }) {
     const element = ref<HTMLElement>();
     const instance = ref<Modal>();
-    let root = document.documentElement;
 
     useEventListener(element, "shown.bs.modal", () => emit("shown"));
     useEventListener(element, "hidden.bs.modal", () => emit("hidden"));
@@ -104,13 +96,11 @@ export default defineComponent({
     );
 
     useEventListener(element, "show.bs.modal", () => {
-      root.classList.add("app-scrollbar");
       emit("show");
       emit("update:open", true);
     });
 
     useEventListener(element, "hide.bs.modal", () => {
-      root.classList.remove("app-scrollbar");
       emit("hide");
       emit("update:open", false);
     });
@@ -124,7 +114,6 @@ export default defineComponent({
     });
 
     onUnmounted(() => {
-      root.classList.remove("app-scrollbar");
       instance.value?.hide();
     });
 
@@ -156,72 +145,10 @@ export default defineComponent({
     box-shadow: none;
   }
 }
-.modal-delete-success {
-  .modal-header {
-    border-bottom: none !important;
-  }
+.project-create {
   .modal-body {
-    padding-top: 0;
-  }
-}
-.crop-modal-zoom {
-  .modal-footer {
-    flex-wrap: unset;
-  }
-}
-@media (min-width: 320px) and (max-width: 768px) {
-  .modal-delete-confirm {
-    .modal-footer {
-      justify-content: center;
-    }
-  }
-  .crop-modal-zoom {
-    .modal-footer {
-      flex-wrap: wrap;
-    }
-  }
-}
-.content-h100 {
-  .modal-content {
-    height: 100%;
-  }
-  .modal-header {
-    border-bottom: none;
-    padding-bottom: 0;
-  }
-  .modal-footer {
-    display: none;
-  }
-}
-.circle {
-  border-style: solid;
-  border-width: 1px;
-  border-color: #343a40;
-  border-radius: 50%;
-  -webkit-border-radius: 50%;
-  -moz-border-radius: 50%;
-  display: inline;
-  padding: 3px 6px 4px;
-  font-size: 14px;
-  line-height: 12px;
-  margin-top: 7px;
-}
-@media (max-width: 768px) {
-  .modal-template-list-mb {
-    .modal-body {
-      padding: 0;
-    }
-    .modal-content .modal-header .modal-title {
-      font-size: 18px !important;
-    }
-  }
-}
-.modal-confirm-link-message {
-  .modal-title {
-    font-size: 18px !important;
-  }
-  .modal-body {
-    font-size: 14px;
+    min-height: 450px;
+    overflow: auto;
   }
 }
 </style>

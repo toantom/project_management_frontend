@@ -1,12 +1,14 @@
 <template>
-  <div class="homepage">
-    <div class="row w-100 pe-2 ps-4 pt-4 ps-sm-4 px-sm-4">
+  <div class="homepage px-2 px-sm-4">
+    <h1 class="mb-2">Home Page</h1>
+    <div class="row w-100 ms-0">
       <div class="tab-info col-lg-4 col-md-6 col-sm-12">
         <homepage-info
           :info-class="'project'"
-          :info-title="'Projects'"
+          :info-title="'Top five projects'"
           :info-list="projects"
-          :view-all-projects="true"
+          :view-all="true"
+          @view-all="$router.push({ path: '/project' })"
         >
         </homepage-info>
       </div>
@@ -28,7 +30,7 @@ import { defineComponent } from "vue";
 import HomepageInfo from "@/components/home/HomepageInfo";
 //service
 import ProjectService from "@/services/project.service";
-import { SET_LOADING } from "@/store/mutations.types";
+
 export default defineComponent({
   name: "HomePage",
   components: {
@@ -45,16 +47,23 @@ export default defineComponent({
     };
   },
   async mounted() {
-    this.$store.commit(SET_LOADING, true);
-    const response = await ProjectService.getListProjects(1, 5);
-    this.projects = response.data.data;
-    this.projects.forEach((project) => {
-      project.href = "projects/" + project.id;
-      const date = new Date(project.created_at);
-      project.created_at =
-        date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
-    });
-    this.$store.commit(SET_LOADING, false);
+    await this.getProjects();
+  },
+  methods: {
+    async getProjects() {
+      const response = await ProjectService.getListProjects(1, 5);
+      this.projects = response.data.data;
+      this.projects.forEach((project) => {
+        project.href = "projects/" + project.id;
+        const date = new Date(project.created_at);
+        project.created_at =
+          date.getDate() +
+          "/" +
+          (date.getMonth() + 1) +
+          "/" +
+          date.getFullYear();
+      });
+    },
   },
 });
 </script>

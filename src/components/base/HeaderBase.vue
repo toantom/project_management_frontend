@@ -43,28 +43,53 @@
     <nav class="nav-sidebar">
       <div>
         <div class="nav_list">
-          <a href="#" class="nav_link-sidebar active">
+          <a href="#" class="nav_link-sidebar" :class="projectList && 'active'">
+            <i class="bx bx-receipt nav_icon-sidebar"></i>
+            <span class="nav_name">Project</span>
+          </a>
+        </div>
+        <div class="nav_list">
+          <a
+            href="#"
+            class="nav_link-sidebar"
+            :class="projectOverview && 'active'"
+          >
             <i class="bx bx-info-circle nav_icon-sidebar"></i>
             <span class="nav_name">Overview</span>
           </a>
           <a href="#" class="nav_link-sidebar">
-            <i class="bx bx-grid-alt nav_icon-sidebar"></i>
+            <i
+              class="bx bx-grid-alt nav_icon-sidebar"
+              :class="projectDashboard && 'active'"
+            ></i>
             <span class="nav_name">Dashboard</span>
           </a>
           <a href="#" class="nav_link-sidebar">
-            <i class="bx bx-book-content nav_icon-sidebar"></i>
+            <i
+              class="bx bx-book-content nav_icon-sidebar"
+              :class="projectBacklog && 'active'"
+            ></i>
             <span class="nav_name">Backlogs</span>
           </a>
           <a href="#" class="nav_link-sidebar">
-            <i class="bx bx-briefcase-alt-2 nav_icon-sidebar"></i>
+            <i
+              class="bx bx-briefcase-alt-2 nav_icon-sidebar"
+              :class="projectWorkPackages && 'active'"
+            ></i>
             <span class="nav_name">Work packages</span>
           </a>
           <a href="#" class="nav_link-sidebar">
-            <i class="bx bxs-book-reader nav_icon-sidebar"></i>
+            <i
+              class="bx bxs-book-reader nav_icon-sidebar"
+              :class="projectWiki && 'active'"
+            ></i>
             <span class="nav_name">Wiki</span>
           </a>
           <a href="#" class="nav_link-sidebar">
-            <i class="bx bx-group nav_icon-sidebar"></i>
+            <i
+              class="bx bx-group nav_icon-sidebar"
+              :class="projectMember && 'active'"
+            ></i>
             <span class="nav_name">Members</span>
           </a>
         </div>
@@ -86,6 +111,29 @@ export default defineComponent({
     return {
       showModalLogout: false,
     };
+  },
+  computed: {
+    projectList(): boolean {
+      return this.$route.name === "ProjectList";
+    },
+    projectOverview(): boolean {
+      return this.$route.name === "ProjectOverview";
+    },
+    projectDashboard(): boolean {
+      return this.$route.name === "ProjectDashboard";
+    },
+    projectBacklog(): boolean {
+      return this.$route.name === "projectBacklog";
+    },
+    projectWorkPackages(): boolean {
+      return this.$route.name === "projectWorkPackages";
+    },
+    projectWiki(): boolean {
+      return this.$route.name === "projectWiki";
+    },
+    projectMember(): boolean {
+      return this.$route.name === "projectMember";
+    },
   },
   methods: {
     showModalLogOut() {
