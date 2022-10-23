@@ -44,6 +44,16 @@ const routes = [
         name: "MyAccount",
         component: () => import("../views/my_info/AccountView.vue"),
       },
+      {
+        path: "/project",
+        name: "ProjectList",
+        component: () => import("../views/projects/ProjectList.vue"),
+      },
+      {
+        path: "/project/:project_title",
+        name: "ProjectDetail",
+        component: () => import("../views/projects/ProjectDetail.vue"),
+      },
     ],
     meta: {
       requiresAuth: true,
@@ -58,7 +68,7 @@ const router = createRouter({
 });
 router.beforeEach((to, from, next) => {
   if (to.matched.length === 0) {
-    if (UserService.isAdmin()) {
+    if (UserService.isAdminType()) {
       next({ name: "AdminMessage" });
     } else {
       next({ path: "/" });
@@ -74,7 +84,7 @@ router.beforeEach((to, from, next) => {
     } else if (
       !to.matched.some((record) => record.meta.userType === userType)
     ) {
-      if (UserService.isAdmin()) {
+      if (UserService.isAdminType()) {
         next({ name: "AdminMessage" });
       } else {
         next({ path: "/" });
@@ -87,7 +97,7 @@ router.beforeEach((to, from, next) => {
   } else if (to.matched.some((record) => record.meta.guest)) {
     if (JwtService.getToken() == null) {
       next();
-    } else if (UserService.isAdmin()) {
+    } else if (UserService.isAdminType()) {
       next({ name: "AdminMessage" });
     } else {
       next({ path: "/" });

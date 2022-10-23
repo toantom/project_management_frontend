@@ -7,12 +7,19 @@ import "bootstrap";
 import "boxicons/css/boxicons.min.css";
 import Toast, { PluginOptions } from "vue-toastification";
 import "vue-toastification/dist/index.css";
+import "vue-select/dist/vue-select.css";
+import vSelect from "vue-select";
 
 const options: PluginOptions = {
   transition: "Vue-Toastification__bounce",
   maxToasts: 5,
   newestOnTop: true,
   draggable: false,
-  timeout: 5000,
+  timeout: 2500,
 };
-createApp(App).use(store).use(router).use(Toast, options).mount("#app");
+createApp(App)
+  .use(store)
+  .use(router)
+  .use(Toast, options)
+  .component("v-select", vSelect)
+  .mount("#app");

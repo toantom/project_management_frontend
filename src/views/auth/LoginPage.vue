@@ -143,7 +143,6 @@ export default defineComponent({
 <style lang="scss" scoped>
 #login-form {
   height: 100vh;
-  background-color: rgb(237, 237, 237);
   .form {
     width: 511px;
     position: absolute;
