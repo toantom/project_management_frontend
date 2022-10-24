@@ -42,6 +42,7 @@ export default {
         return error.response;
       });
   },
+  // eslint-disable-next-line
   createProject(data: object): Promise<any | void> {
     return ApiService.post(API_PROJECTS, data)
       .then((response: AxiosResponse) => {

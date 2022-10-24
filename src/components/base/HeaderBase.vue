@@ -1,107 +1,145 @@
 <template>
-  <header class="header" id="header">
-    <div class="header_toggle">
-      <i
-        class="bx bx-menu"
-        id="header-toggle"
-        @click="(e) => showNavbar(e)"
-      ></i>
-    </div>
-    <div class="dropdown text-end">
-      <div
-        class="d-block link-dark text-decoration-none cursor-pointer"
-        id="dropdownUser"
-        data-bs-toggle="dropdown"
-        aria-expanded="false"
-      >
-        <img
-          src="https://github.com/mdo.png"
-          alt="mdo"
-          width="40"
-          height="40"
-          class="rounded-circle"
-        />
+  <template v-if="isEmployee">
+    <header class="header-root" id="header">
+      <div class="header_toggle">
+        <i
+          class="bx bx-menu"
+          id="header-toggle"
+          @click="(e) => showNavbar(e)"
+        ></i>
       </div>
-      <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser">
-        <li><div class="dropdown-item">My Page</div></li>
-        <li>
-          <div
-            class="dropdown-item"
-            @click="$router.push({ path: '/account' })"
-          >
-            My Account
+      <div class="dropdown text-end">
+        <div
+          class="d-block link-dark text-decoration-none cursor-pointer"
+          id="dropdownUser"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          <img
+            :src="`https://ui-avatars.com/api/?name=${user.name}?background=random&color=fff`"
+            alt="mdo"
+            width="40"
+            height="40"
+            class="rounded-circle"
+          />
+        </div>
+        <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser">
+          <template v-if="isEmployee">
+            <li><div class="dropdown-item">My Page</div></li>
+            <li>
+              <div
+                class="dropdown-item"
+                @click="$router.push({ path: '/account' })"
+              >
+                My Account
+              </div>
+            </li>
+            <li><hr class="dropdown-divider" /></li>
+          </template>
+
+          <li>
+            <div class="dropdown-item" @click="showModalLogOut">Sign out</div>
+          </li>
+        </ul>
+      </div>
+    </header>
+    <div class="l-navbar" id="nav-sidebar">
+      <nav class="nav-sidebar">
+        <div>
+          <div class="nav_list">
+            <a
+              href="#"
+              class="nav_link-sidebar"
+              :class="projectOverview && 'active'"
+            >
+              <i class="bx bx-info-circle nav_icon-sidebar"></i>
+              <span class="nav_name">Overview</span>
+            </a>
+            <a href="#" class="nav_link-sidebar">
+              <i
+                class="bx bx-grid-alt nav_icon-sidebar"
+                :class="projectDashboard && 'active'"
+              ></i>
+              <span class="nav_name">Dashboard</span>
+            </a>
+            <a href="#" class="nav_link-sidebar">
+              <i
+                class="bx bx-book-content nav_icon-sidebar"
+                :class="projectBacklog && 'active'"
+              ></i>
+              <span class="nav_name">Backlogs</span>
+            </a>
+            <a href="#" class="nav_link-sidebar">
+              <i
+                class="bx bx-briefcase-alt-2 nav_icon-sidebar"
+                :class="projectWorkPackages && 'active'"
+              ></i>
+              <span class="nav_name">Work packages</span>
+            </a>
+            <a href="#" class="nav_link-sidebar">
+              <i
+                class="bx bxs-book-reader nav_icon-sidebar"
+                :class="projectWiki && 'active'"
+              ></i>
+              <span class="nav_name">Wiki</span>
+            </a>
+            <a href="#" class="nav_link-sidebar">
+              <i
+                class="bx bx-group nav_icon-sidebar"
+                :class="projectMember && 'active'"
+              ></i>
+              <span class="nav_name">Members</span>
+            </a>
           </div>
-        </li>
-        <li><hr class="dropdown-divider" /></li>
-        <li>
-          <div class="dropdown-item" @click="showModalLogOut">Sign out</div>
-        </li>
-      </ul>
+        </div>
+      </nav>
     </div>
-  </header>
-  <div class="l-navbar" id="nav-sidebar">
-    <nav class="nav-sidebar">
-      <div>
-        <div class="nav_list">
-          <a href="#" class="nav_link-sidebar" :class="projectList && 'active'">
-            <i class="bx bx-receipt nav_icon-sidebar"></i>
-            <span class="nav_name">Project</span>
-          </a>
+  </template>
+  <template v-else>
+    <header class="header-root justify-content-end" id="header">
+      <div class="dropdown text-end">
+        <div
+          class="d-block link-dark text-decoration-none cursor-pointer"
+          id="dropdownUser"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          <img
+            :src="`https://ui-avatars.com/api/?name=${user.name}?background=random`"
+            alt="mdo"
+            width="40"
+            class="rounded-circle"
+          />
         </div>
-        <div class="nav_list">
-          <a
-            href="#"
-            class="nav_link-sidebar"
-            :class="projectOverview && 'active'"
-          >
-            <i class="bx bx-info-circle nav_icon-sidebar"></i>
-            <span class="nav_name">Overview</span>
-          </a>
-          <a href="#" class="nav_link-sidebar">
-            <i
-              class="bx bx-grid-alt nav_icon-sidebar"
-              :class="projectDashboard && 'active'"
-            ></i>
-            <span class="nav_name">Dashboard</span>
-          </a>
-          <a href="#" class="nav_link-sidebar">
-            <i
-              class="bx bx-book-content nav_icon-sidebar"
-              :class="projectBacklog && 'active'"
-            ></i>
-            <span class="nav_name">Backlogs</span>
-          </a>
-          <a href="#" class="nav_link-sidebar">
-            <i
-              class="bx bx-briefcase-alt-2 nav_icon-sidebar"
-              :class="projectWorkPackages && 'active'"
-            ></i>
-            <span class="nav_name">Work packages</span>
-          </a>
-          <a href="#" class="nav_link-sidebar">
-            <i
-              class="bx bxs-book-reader nav_icon-sidebar"
-              :class="projectWiki && 'active'"
-            ></i>
-            <span class="nav_name">Wiki</span>
-          </a>
-          <a href="#" class="nav_link-sidebar">
-            <i
-              class="bx bx-group nav_icon-sidebar"
-              :class="projectMember && 'active'"
-            ></i>
-            <span class="nav_name">Members</span>
-          </a>
-        </div>
+        <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser">
+          <template v-if="isEmployee">
+            <li><div class="dropdown-item">My Page</div></li>
+            <li>
+              <div
+                class="dropdown-item"
+                @click="$router.push({ path: '/account' })"
+              >
+                My Account
+              </div>
+            </li>
+            <li><hr class="dropdown-divider" /></li>
+          </template>
+
+          <li>
+            <div class="dropdown-item" @click="showModalLogOut">Sign out</div>
+          </li>
+        </ul>
       </div>
-    </nav>
-  </div>
+    </header>
+  </template>
   <logout-modal v-if="showModalLogout" @close="showModalLogout = false" />
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
 import LogoutModal from "@/components/base/LogoutModal.vue";
+import UserService from "@/common/user.service";
+import { mapGetters } from "vuex";
 export default defineComponent({
   name: "HeaderBase",
   components: {
@@ -110,9 +148,11 @@ export default defineComponent({
   data() {
     return {
       showModalLogout: false,
+      isEmployee: false,
     };
   },
   computed: {
+    ...mapGetters(["user"]),
     projectList(): boolean {
       return this.$route.name === "ProjectList";
     },
@@ -134,6 +174,9 @@ export default defineComponent({
     projectMember(): boolean {
       return this.$route.name === "projectMember";
     },
+  },
+  mounted() {
+    this.isEmployee = !UserService.isAdminType();
   },
   methods: {
     showModalLogOut() {
@@ -166,7 +209,7 @@ export default defineComponent({
   --normal-font-size: 1rem;
   --z-fixed: 100;
 }
-.header {
+.header-root {
   width: 100%;
   height: var(--header-height);
   position: fixed;
@@ -267,7 +310,7 @@ export default defineComponent({
     margin: calc(var(--header-height) + 1rem) 0 0 0 !important;
     padding-left: calc(var(--nav-width) + 2rem);
   }
-  .header {
+  .header-root {
     height: calc(var(--header-height) + 1rem);
     padding: 0 2rem 0 calc(var(--nav-width) + 1rem);
   }

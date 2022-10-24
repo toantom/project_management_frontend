@@ -33,8 +33,8 @@ const mutations: MutationTree<AuthState> & AuthMutationsType = {
     if (status === 401) store.commit(AUTH_LOGOUT);
   },
   [SET_AUTH](state, data) {
-    state.user = data.data;
-    UserService.saveUser(data.data);
+    state.user = data;
+    UserService.saveUser(data);
   },
   [AUTH_LOGOUT](state) {
     state.errors = "";

@@ -47,11 +47,11 @@ export default {
   getAccountMe(): Promise<any | void> {
     return new Promise((resolve, reject) => {
       ApiService.get(API_ACCOUNT_ME)
-        .then((response) => {
-          store.commit(SET_AUTH, response);
+        .then((response: AxiosResponse) => {
+          store.commit(SET_AUTH, response.data);
           resolve(response.data);
         })
-        .catch((error) => {
+        .catch((error: AxiosError) => {
           store.commit(SET_ERROR, error);
           reject(error.response);
         });
