@@ -42,7 +42,6 @@ export default defineComponent({
       accountList: [
         { title: "Profile", href: "account" },
         { title: "My page", href: "my-page" },
-        { title: "Change password", href: "change-password" },
       ],
     };
   },

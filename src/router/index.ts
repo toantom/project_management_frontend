@@ -2,10 +2,16 @@ import { createRouter, createWebHistory } from "vue-router";
 import AuthenticatedLayout from "@/components/layouts/AuthenticatedLayout.vue";
 import HomePage from "@/views/home/HomePage.vue";
 import AuthenticateLayout from "@/components/layouts/AuthenticateLayout.vue";
-import { PAGE_TITLES, USER_TYPE_EMPLOYEE } from "@/common/constants";
+import {
+  PAGE_TITLES,
+  USER_TYPE_ADMIN,
+  USER_TYPE_EMPLOYEE,
+} from "@/common/constants";
 import { nextTick } from "vue";
 import JwtService from "@/common/jwt.service";
 import UserService from "@/common/user.service";
+import AdminLayout from "@/components/layouts/AdminLayout.vue";
+import AdminPage from "@/views/admin/AdminPage.vue";
 
 const routes = [
   {
@@ -60,6 +66,21 @@ const routes = [
       userType: USER_TYPE_EMPLOYEE,
     },
   },
+  {
+    path: "/",
+    component: AdminLayout,
+    children: [
+      {
+        path: "/",
+        name: "AdminPage",
+        component: AdminPage,
+      },
+    ],
+    meta: {
+      requiresAuth: true,
+      userType: USER_TYPE_ADMIN,
+    },
+  },
 ];
 
 const router = createRouter({
@@ -69,7 +90,7 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   if (to.matched.length === 0) {
     if (UserService.isAdminType()) {
-      next({ name: "AdminMessage" });
+      next({ name: "AdminPage" });
     } else {
       next({ path: "/" });
     }
@@ -85,7 +106,7 @@ router.beforeEach((to, from, next) => {
       !to.matched.some((record) => record.meta.userType === userType)
     ) {
       if (UserService.isAdminType()) {
-        next({ name: "AdminMessage" });
+        next({ name: "AdminPage" });
       } else {
         next({ path: "/" });
       }

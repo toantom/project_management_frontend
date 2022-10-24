@@ -1,6 +1,12 @@
 <template>
   <form action="" class="profile-form mt-3">
     <div class="mb-3 row">
+      <label for="email" class="col-sm-4 col-form-label text-start">
+        Login Email
+      </label>
+      <div class="col-sm-2">{{ email }}</div>
+    </div>
+    <div class="mb-3 row">
       <label for="username" class="col-sm-4 col-form-label text-start">
         Username <span class="required-input">*</span>
       </label>
@@ -11,20 +17,6 @@
           id="username"
           placeholder="Username"
           v-model="username"
-        />
-      </div>
-    </div>
-    <div class="mb-3 row">
-      <label for="email" class="col-sm-4 col-form-label text-start">
-        Email <span class="required-input">*</span>
-      </label>
-      <div class="col-sm-8">
-        <input
-          type="email"
-          class="form-control"
-          id="email"
-          placeholder="abc@example.com"
-          v-model="email"
         />
       </div>
     </div>
@@ -46,6 +38,8 @@ import ButtonBase from "@/components/base/ButtonBase.vue";
 import AccountService from "@/services/account.service";
 import { mapGetters } from "vuex";
 import { useToast } from "vue-toastification";
+import { store } from "@/store";
+import { SET_AUTH } from "@/store/mutations.types";
 export default defineComponent({
   name: "ProfileEdit",
   components: {
@@ -60,43 +54,31 @@ export default defineComponent({
     };
   },
   mounted() {
-    this.load();
+    this.userId = this.user.id;
+    this.username = this.user.name;
+    this.email = this.user.email;
   },
   watch: {
-    email(value) {
-      this.disabled = !!(value && this.username);
-    },
     username(value) {
-      this.disabled = !!(value && this.email);
+      this.disabled = !!value;
     },
   },
   computed: {
     ...mapGetters(["user"]),
   },
   methods: {
-    async load() {
-      this.userId = this.user.user.id;
-      const response = await AccountService.getAccountInfo(this.userId);
-      if (response) {
-        this.username = response.user.name;
-        this.email = response.user.email;
-      }
-    },
-
     async submit() {
       const data = {
         name: this.username,
-        email: this.email,
       };
       const response = await AccountService.updateAccountInfo(
         data,
         this.userId
       );
       const toast = useToast();
-
-      if (response.data.status) {
+      if (response.result === "ok") {
         toast.success("Update Info User Success");
-        await this.load();
+        store.commit(SET_AUTH, response.user);
       } else {
         const errors = Object.values(response.data.errors);
         let errorString = "";
