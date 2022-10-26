@@ -101,18 +101,39 @@
       </div>
     </div>
   </div>
+  <modal-base
+    :title="'Verification email sent!'"
+    :primary-label="'Redirect to Login'"
+    :close-button="true"
+    :active="true"
+    :open="isOpenModalVerifyEmail"
+    :classes="['verify-email', 'modal-md']"
+    @ok="this.$router.push({ name: 'Login' })"
+    @hidden="isOpenModalVerifyEmail = false"
+    @cancel="isOpenModalVerifyEmail = false"
+  >
+    <div class="text-center">
+      <p>
+        This action requires email verification. Please check your inbox and
+        follow the instructions. <br />
+        Email sent to:
+      </p>
+      <p class="fw-bold">{{ email }}</p>
+    </div>
+  </modal-base>
 </template>
 
 <script>
 import { defineComponent } from "vue";
 //components
 import ButtonBase from "@/components/base/ButtonBase";
+import ModalBase from "@/components/base/ModalBase";
 import { API_REGISTER } from "@/common/api.constants";
-import AuthService from "@/services/auth.service";
 export default defineComponent({
   name: "SignUp",
   components: {
     ButtonBase,
+    ModalBase,
   },
   data() {
     return {
@@ -122,6 +143,7 @@ export default defineComponent({
       confirmPassword: "",
       disabled: false,
       error: [],
+      isOpenModalVerifyEmail: false,
     };
   },
   watch: {
@@ -164,10 +186,7 @@ export default defineComponent({
       this.$store
         .dispatch(API_REGISTER, payload)
         .then(() => {
-          this.error = "";
-          AuthService.getAccountMe().then(() =>
-            this.$router.push({ name: "Homepage" })
-          );
+          this.isOpenModalVerifyEmail = true;
         })
         .catch((response) => {
           this.error = response.data.errors;

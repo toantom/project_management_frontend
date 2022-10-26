@@ -16,7 +16,7 @@
           aria-expanded="false"
         >
           <img
-            :src="`https://ui-avatars.com/api/?name=${user.name}?background=random&color=fff`"
+            :src="`https://ui-avatars.com/api/?name=${user.name}&color=fff&background=0D8ABC`"
             alt="mdo"
             width="40"
             height="40"
@@ -45,52 +45,50 @@
     </header>
     <div class="l-navbar" id="nav-sidebar">
       <nav class="nav-sidebar">
-        <div>
-          <div class="nav_list">
-            <a
-              href="#"
-              class="nav_link-sidebar"
-              :class="projectOverview && 'active'"
-            >
-              <i class="bx bx-info-circle nav_icon-sidebar"></i>
-              <span class="nav_name">Overview</span>
-            </a>
-            <a href="#" class="nav_link-sidebar">
-              <i
-                class="bx bx-grid-alt nav_icon-sidebar"
-                :class="projectDashboard && 'active'"
-              ></i>
-              <span class="nav_name">Dashboard</span>
-            </a>
-            <a href="#" class="nav_link-sidebar">
-              <i
-                class="bx bx-book-content nav_icon-sidebar"
-                :class="projectBacklog && 'active'"
-              ></i>
-              <span class="nav_name">Backlogs</span>
-            </a>
-            <a href="#" class="nav_link-sidebar">
-              <i
-                class="bx bx-briefcase-alt-2 nav_icon-sidebar"
-                :class="projectWorkPackages && 'active'"
-              ></i>
-              <span class="nav_name">Work packages</span>
-            </a>
-            <a href="#" class="nav_link-sidebar">
-              <i
-                class="bx bxs-book-reader nav_icon-sidebar"
-                :class="projectWiki && 'active'"
-              ></i>
-              <span class="nav_name">Wiki</span>
-            </a>
-            <a href="#" class="nav_link-sidebar">
-              <i
-                class="bx bx-group nav_icon-sidebar"
-                :class="projectMember && 'active'"
-              ></i>
-              <span class="nav_name">Members</span>
-            </a>
-          </div>
+        <div class="nav_list">
+          <a
+            href="#"
+            class="nav_link-sidebar"
+            :class="projectOverview && 'active'"
+          >
+            <i class="bx bx-info-circle nav_icon-sidebar"></i>
+            <span class="nav_name">Overview</span>
+          </a>
+          <a href="#" class="nav_link-sidebar">
+            <i
+              class="bx bx-grid-alt nav_icon-sidebar"
+              :class="projectDashboard && 'active'"
+            ></i>
+            <span class="nav_name">Dashboard</span>
+          </a>
+          <a href="#" class="nav_link-sidebar">
+            <i
+              class="bx bx-book-content nav_icon-sidebar"
+              :class="projectBacklog && 'active'"
+            ></i>
+            <span class="nav_name">Backlogs</span>
+          </a>
+          <a href="#" class="nav_link-sidebar">
+            <i
+              class="bx bx-briefcase-alt-2 nav_icon-sidebar"
+              :class="projectWorkPackages && 'active'"
+            ></i>
+            <span class="nav_name">Work packages</span>
+          </a>
+          <a href="#" class="nav_link-sidebar">
+            <i
+              class="bx bxs-book-reader nav_icon-sidebar"
+              :class="projectWiki && 'active'"
+            ></i>
+            <span class="nav_name">Wiki</span>
+          </a>
+          <a href="#" class="nav_link-sidebar">
+            <i
+              class="bx bx-group nav_icon-sidebar"
+              :class="projectMember && 'active'"
+            ></i>
+            <span class="nav_name">Members</span>
+          </a>
         </div>
       </nav>
     </div>

@@ -151,4 +151,14 @@ export default defineComponent({
     overflow: auto;
   }
 }
+.verify-email {
+  .modal-body {
+    p {
+      text-align: center;
+    }
+    .email {
+      font-weight: bold;
+    }
+  }
+}
 </style>
