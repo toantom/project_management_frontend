@@ -23,11 +23,11 @@ interface AuthActionsType {
 }
 
 const actions: ActionTree<AuthState, RootState> & AuthActionsType = {
-  [API_REGISTER]({ commit }, payload: LoginPayload) {
+  // eslint-disable-next-line no-empty-pattern
+  [API_REGISTER]({}, payload: LoginPayload) {
     return new Promise((resolve, reject) => {
       NotAuthorizationApiService.post(API_REGISTER, payload)
         .then((response: AxiosResponse) => {
-          commit(SET_TOKEN, response.data);
           resolve(response);
         })
         .catch((error: AxiosError) => {

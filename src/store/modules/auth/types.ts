@@ -12,5 +12,5 @@ export type LoginPayload = {
 };
 
 export type AuthMutationsType<S = AuthState> = {
-  [SET_TOKEN](state: S, payload: TokenPayload): void;
+  [SET_TOKEN](state: S | null, payload: TokenPayload): void;
 };

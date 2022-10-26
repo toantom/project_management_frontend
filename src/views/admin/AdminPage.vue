@@ -22,6 +22,7 @@
                 data-placeholder="Select a Role"
                 @change="(e) => changeEmployeeInfo(e, employee.id)"
               >
+                <option value="0" :disabled="employee.role">----</option>
                 <option
                   value="role-1"
                   :selected="employee.role === USER_ROLE_EMPLOYEE"
@@ -108,6 +109,9 @@ export default defineComponent({
   },
   methods: {
     async changeEmployeeInfo(e: { target: HTMLInputElement }, user_id: string) {
+      if (e.target.value === "0") {
+        return;
+      }
       const value = e.target.value.split("-");
       const data = {
         field: value[0],
@@ -117,6 +121,10 @@ export default defineComponent({
         if (res.result === "ok") {
           const toast = useToast();
           toast.success("Update Successful");
+          if (value[0] === "role") {
+            const firstE = e.target.firstElementChild as HTMLElement;
+            firstE.setAttribute("disabled", "");
+          }
         }
       });
     },
