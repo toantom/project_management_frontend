@@ -8,7 +8,7 @@
           :info-title="'Top five projects'"
           :info-list="projects"
           :view-all="true"
-          @view-all="$router.push({ path: '/project' })"
+          @view-all="$router.push({ path: '/projects' })"
         >
         </homepage-info>
       </div>

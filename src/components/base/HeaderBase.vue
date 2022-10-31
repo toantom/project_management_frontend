@@ -8,6 +8,9 @@
           @click="(e) => showNavbar(e)"
         ></i>
       </div>
+      <router-link :to="{ name: 'Homepage' }">
+        <img src="../../assets/image/logo.png" alt="" class="logo" />
+      </router-link>
       <div class="dropdown text-end">
         <div
           class="d-block link-dark text-decoration-none cursor-pointer"
@@ -16,7 +19,7 @@
           aria-expanded="false"
         >
           <img
-            :src="`https://ui-avatars.com/api/?name=${user.name}&color=fff&background=0D8ABC`"
+            :src="`https://ui-avatars.com/api/?name=${user.name}&background=4723d9&color=fff`"
             alt="mdo"
             width="40"
             height="40"
@@ -45,50 +48,71 @@
     </header>
     <div class="l-navbar" id="nav-sidebar">
       <nav class="nav-sidebar">
-        <div class="nav_list">
-          <a
-            href="#"
-            class="nav_link-sidebar"
-            :class="projectOverview && 'active'"
-          >
-            <i class="bx bx-info-circle nav_icon-sidebar"></i>
-            <span class="nav_name">Overview</span>
-          </a>
-          <a href="#" class="nav_link-sidebar">
-            <i
-              class="bx bx-grid-alt nav_icon-sidebar"
+        <div v-if="Object.keys(project).length === 0">
+          <div class="nav_list">
+            <router-link
+              :to="{
+                name: 'ProjectList',
+              }"
+              class="nav_link-sidebar"
+              :class="projectList && 'active'"
+            >
+              <i class="bx bx-info-circle nav_icon-sidebar"></i>
+              <span class="nav_name">Project</span>
+            </router-link>
+          </div>
+        </div>
+        <div v-else>
+          <div class="nav_list">
+            <router-link
+              :to="{
+                name: 'ProjectDetail',
+                params: { project_id: project.id },
+              }"
+              class="nav_link-sidebar"
+              :class="ProjectDetail && 'active'"
+            >
+              <i class="bx bx-info-circle nav_icon-sidebar"></i>
+              <span class="nav_name">Overview</span>
+            </router-link>
+            <a
+              href="#"
+              class="nav_link-sidebar"
               :class="projectDashboard && 'active'"
-            ></i>
-            <span class="nav_name">Dashboard</span>
-          </a>
-          <a href="#" class="nav_link-sidebar">
-            <i
-              class="bx bx-book-content nav_icon-sidebar"
+            >
+              <i class="bx bx-grid-alt nav_icon-sidebar"></i>
+              <span class="nav_name">Dashboard</span>
+            </a>
+            <router-link
+              :to="{ name: 'ProjectBacklog' }"
+              class="nav_link-sidebar"
               :class="projectBacklog && 'active'"
-            ></i>
-            <span class="nav_name">Backlogs</span>
-          </a>
-          <a href="#" class="nav_link-sidebar">
-            <i
-              class="bx bx-briefcase-alt-2 nav_icon-sidebar"
-              :class="projectWorkPackages && 'active'"
-            ></i>
-            <span class="nav_name">Work packages</span>
-          </a>
-          <a href="#" class="nav_link-sidebar">
-            <i
-              class="bx bxs-book-reader nav_icon-sidebar"
-              :class="projectWiki && 'active'"
-            ></i>
-            <span class="nav_name">Wiki</span>
-          </a>
-          <a href="#" class="nav_link-sidebar">
-            <i
-              class="bx bx-group nav_icon-sidebar"
-              :class="projectMember && 'active'"
-            ></i>
-            <span class="nav_name">Members</span>
-          </a>
+            >
+              <i class="bx bx-book-content nav_icon-sidebar"></i>
+              <span class="nav_name">Backlogs</span>
+            </router-link>
+            <a href="#" class="nav_link-sidebar">
+              <i
+                class="bx bx-briefcase-alt-2 nav_icon-sidebar"
+                :class="projectWorkPackages && 'active'"
+              ></i>
+              <span class="nav_name">Work packages</span>
+            </a>
+            <a href="#" class="nav_link-sidebar">
+              <i
+                class="bx bxs-book-reader nav_icon-sidebar"
+                :class="projectWiki && 'active'"
+              ></i>
+              <span class="nav_name">Wiki</span>
+            </a>
+            <a href="#" class="nav_link-sidebar">
+              <i
+                class="bx bx-group nav_icon-sidebar"
+                :class="projectMember && 'active'"
+              ></i>
+              <span class="nav_name">Members</span>
+            </a>
+          </div>
         </div>
       </nav>
     </div>
@@ -103,26 +127,13 @@
           aria-expanded="false"
         >
           <img
-            :src="`https://ui-avatars.com/api/?name=${user.name}?background=random`"
+            :src="`https://ui-avatars.com/api/?name=${user.name}&background=4723d9&color=fff`"
             alt="mdo"
             width="40"
             class="rounded-circle"
           />
         </div>
         <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser">
-          <template v-if="isEmployee">
-            <li><div class="dropdown-item">My Page</div></li>
-            <li>
-              <div
-                class="dropdown-item"
-                @click="$router.push({ path: '/account' })"
-              >
-                My Account
-              </div>
-            </li>
-            <li><hr class="dropdown-divider" /></li>
-          </template>
-
           <li>
             <div class="dropdown-item" @click="showModalLogOut">Sign out</div>
           </li>
@@ -138,6 +149,8 @@ import { defineComponent } from "vue";
 import LogoutModal from "@/components/base/LogoutModal.vue";
 import UserService from "@/common/user.service";
 import { mapGetters } from "vuex";
+import { store } from "@/store";
+import { SET_PROJECT } from "@/store/mutations.types";
 export default defineComponent({
   name: "HeaderBase",
   components: {
@@ -149,28 +162,35 @@ export default defineComponent({
       isEmployee: false,
     };
   },
+  watch: {
+    $route() {
+      if (!this.$route.fullPath.includes("projects/")) {
+        store.commit(SET_PROJECT, {});
+      }
+    },
+  },
   computed: {
-    ...mapGetters(["user"]),
+    ...mapGetters(["user", "project"]),
     projectList(): boolean {
       return this.$route.name === "ProjectList";
     },
-    projectOverview(): boolean {
-      return this.$route.name === "ProjectOverview";
+    ProjectDetail(): boolean {
+      return this.$route.name === "ProjectDetail";
     },
     projectDashboard(): boolean {
       return this.$route.name === "ProjectDashboard";
     },
     projectBacklog(): boolean {
-      return this.$route.name === "projectBacklog";
+      return this.$route.name === "ProjectBacklog";
     },
     projectWorkPackages(): boolean {
-      return this.$route.name === "projectWorkPackages";
+      return this.$route.name === "ProjectWorkPackages";
     },
     projectWiki(): boolean {
-      return this.$route.name === "projectWiki";
+      return this.$route.name === "ProjectWiki";
     },
     projectMember(): boolean {
-      return this.$route.name === "projectMember";
+      return this.$route.name === "ProjectMember";
     },
   },
   mounted() {
@@ -301,6 +321,9 @@ export default defineComponent({
 }
 .height-100 {
   height: 100vh;
+}
+.logo {
+  height: 60px;
 }
 
 @media screen and (min-width: 768px) {

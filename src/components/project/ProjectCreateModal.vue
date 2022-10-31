@@ -52,6 +52,7 @@
           :placeholder="'Choose priority'"
           v-model="project.priority"
           :class="errors.message?.priority ? 'is-invalid' : ''"
+          :value="project.priority"
         />
         <div class="invalid-feedback" v-if="errors.message?.priority">
           {{ errors.message.priority[0] }}
@@ -170,7 +171,7 @@ import { defineComponent } from "vue";
 import ModalBase from "@/components/base/ModalBase.vue";
 import DropdownBase from "@/components/base/DropdownBase.vue";
 // type
-import { Option, Project } from "@/views/projects/type";
+import { Option, ProjectCreate } from "@/views/projects/type";
 import ProjectService from "@/services/project.service";
 import { User } from "@/components/account/type";
 import { mapGetters } from "vuex";
@@ -220,22 +221,33 @@ export default defineComponent({
         public: null,
         created_by_id: "",
         employee: null,
-      } as Project,
+      } as ProjectCreate,
       listEmployee: [] as object[],
       listManager: [] as object[],
     };
   },
+  props: {
+    project_id: {
+      type: String,
+      default: "",
+    },
+  },
   watch: {
     "project.start_date"(newVal) {
       this.minEnd = newVal;
-      this.project.end_date = "";
     },
   },
   async mounted() {
+    // eslint-disable-next-line
     const employees: any = await ProjectService.getEmployeeList();
     this.getListMember(employees, this.listEmployee);
+    // eslint-disable-next-line
     const managers: any = await ProjectService.getManagerList();
     this.getListMember(managers, this.listManager);
+    if (this.project_id) {
+      const response = await ProjectService.getProjectDetail(this.project_id);
+      this.project = response.project;
+    }
   },
   beforeUnmount() {
     if (this.errors) {
@@ -265,6 +277,9 @@ export default defineComponent({
       if (!project.end_date || project.end_date == "") {
         errors.end_date = "This is required";
       }
+      if (project.end_date < project.start_date) {
+        errors.end_date = "End date mush greater than start date";
+      }
       if (!project.project_manager) {
         errors.project_manager = "This is required";
       }
@@ -279,6 +294,7 @@ export default defineComponent({
       const user = UserService.getUser();
       const project = this.project;
       const employeeIds: object[] = [];
+      // eslint-disable-next-line
       project.employee?.forEach((item: any) => {
         return employeeIds.push(item.value);
       });
@@ -309,6 +325,7 @@ export default defineComponent({
         }
       });
     },
+    // eslint-disable-next-line
     getListMember(object: any, list: object[]) {
       if (object) {
         object.forEach((item: User) => {

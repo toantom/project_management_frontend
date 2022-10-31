@@ -51,14 +51,32 @@ const routes = [
         component: () => import("../views/my_info/AccountView.vue"),
       },
       {
-        path: "/project",
+        path: "/my-page",
+        name: "MyPage",
+        component: () => import("../views/my_info/MyPage.vue"),
+      },
+      {
+        path: "/projects",
         name: "ProjectList",
         component: () => import("../views/projects/ProjectList.vue"),
       },
       {
-        path: "/project/:project_title",
-        name: "ProjectDetail",
-        component: () => import("../views/projects/ProjectDetail.vue"),
+        path: "/projects/:project_id",
+        name: "ProjectDetailLayout",
+        component: () =>
+          import("../components/layouts/ProjectDetailLayout.vue"),
+        children: [
+          {
+            path: "",
+            name: "ProjectDetail",
+            component: () => import("../views/projects/ProjectDetail.vue"),
+          },
+          {
+            path: "backlog",
+            name: "ProjectBacklog",
+            component: () => import("../views/projects/ProjectBacklog.vue"),
+          },
+        ],
       },
     ],
     meta: {

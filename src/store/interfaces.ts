@@ -10,3 +10,7 @@ export interface AuthState {
 export interface Loading {
   isLoading: boolean;
 }
+
+export interface Project {
+  project: object;
+}
