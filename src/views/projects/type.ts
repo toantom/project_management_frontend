@@ -1,4 +1,5 @@
-export interface Project {
+export interface ProjectCreate {
+  id: string;
   title: string;
   short_name: string;
   priority: Option | null;
@@ -10,9 +11,30 @@ export interface Project {
   status: number | null;
   public: Option | null;
   created_by_id: string;
+  updated_by_id: string;
   employee: object[] | null;
 }
 export interface Option {
   value: number;
   label: string;
+}
+
+export interface Backlog {
+  id: number;
+  backlog_title: string;
+  project_id: number;
+  start_date: string;
+  end_date: string;
+  created_by: string;
+  updated_by: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface BacklogCreate {
+  backlog_title: string;
+  project_id: number | null;
+  start_date: string;
+  end_date: string;
+  created_by: string;
 }

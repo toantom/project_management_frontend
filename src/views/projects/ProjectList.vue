@@ -8,7 +8,7 @@
           class="btn btn-primary d-flex align-items-center"
           @click="isShowProjectCreate = true"
         >
-          <i class="bx bx-plus pe-1" /> Create Projects
+          <i class="bx bx-plus pe-1" /> Create Project
         </button>
       </div>
     </div>
@@ -24,7 +24,17 @@
         </thead>
         <tbody>
           <tr v-for="(project, index) in projects" :key="index">
-            <td>{{ project.title }}</td>
+            <td>
+              <router-link
+                :to="{
+                  name: 'ProjectDetail',
+                  params: { project_id: project.id },
+                }"
+                class="project-link"
+              >
+                {{ project.title }}
+              </router-link>
+            </td>
             <td>{{ PROJECT_STATUS[project.status] }}</td>
             <td>
               <i
@@ -115,6 +125,9 @@ export default defineComponent({
 .project {
   td {
     vertical-align: middle;
+  }
+  .project-link:hover {
+    text-decoration: underline !important;
   }
 }
 </style>

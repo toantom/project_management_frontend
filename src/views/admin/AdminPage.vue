@@ -117,6 +117,7 @@ export default defineComponent({
         field: value[0],
         value: value[1],
       };
+      // eslint-disable-next-line
       await AdminService.updateEmployeeInfo(data, user_id).then((res: any) => {
         if (res.result === "ok") {
           const toast = useToast();
@@ -135,7 +136,7 @@ export default defineComponent({
       });
     },
     async getListEmployee(page: number) {
-      // eslint-disable-next-line no-undef
+      // eslint-disable-next-line
       const response: any = await AdminService.getAdminListEmployees(page);
       if (response) {
         const { per_page, current_page, total } = response.data;
