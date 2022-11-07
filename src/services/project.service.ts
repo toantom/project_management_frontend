@@ -7,7 +7,7 @@ import {
   API_GET_EMPLOYEE_PROJECT,
   API_PROJECTS,
   API_GET_MANAGER_PROJECT,
-  API_UPDATE_PROJECT,
+  API_PROJECT_DETAIL,
 } from "@/common/api.constants";
 import { store } from "@/store";
 import { SET_ERROR, SET_PROJECT } from "@/store/mutations.types";
@@ -56,7 +56,7 @@ export default {
   // eslint-disable-next-line
   getProjectDetail(project_id: string): Promise<any | void> {
     return ApiService.get(
-      API_UPDATE_PROJECT.replace("<project_id>", project_id)
+      API_PROJECT_DETAIL.replace("<project_id>", project_id)
     )
       .then((response: AxiosResponse) => {
         store.commit(SET_PROJECT, response.data.project);
@@ -68,8 +68,8 @@ export default {
   },
   // eslint-disable-next-line
   editProject(project_id: string, data: object): Promise<any | void> {
-    return ApiService.get(
-      API_UPDATE_PROJECT.replace("<project_id>", project_id),
+    return ApiService.put(
+      API_PROJECT_DETAIL.replace("<project_id>", project_id),
       data
     )
       .then((response: AxiosResponse) => {

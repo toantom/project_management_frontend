@@ -12,7 +12,7 @@ export interface ProjectCreate {
   public: Option | null;
   created_by_id: string;
   updated_by_id: string;
-  employee: object[] | null;
+  employees: Option[];
 }
 export interface Option {
   value: number;

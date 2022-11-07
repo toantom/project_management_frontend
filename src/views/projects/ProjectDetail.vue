@@ -22,7 +22,7 @@
         <div class="card">
           <div class="card-body">
             <div class="card-title">Project Description</div>
-            {{ projectDetail.project_description }}
+            <p v-html="projectDetail.project_description"></p>
           </div>
         </div>
       </div>
@@ -41,11 +41,11 @@
             <div class="members">
               <div class="role">Project Manager</div>
               <div class="member">
-                <project-member-span :members="projectMembers.PM" />
+                <project-member-span :members="projectPM" />
               </div>
               <div class="role">Members</div>
               <div class="member">
-                <project-member-span :members="projectMembers.members" />
+                <project-member-span :members="projectDetail.employees" />
               </div>
             </div>
           </div>
@@ -63,7 +63,7 @@
   <project-create-modal
     v-if="isShowEditProject"
     @close="isShowEditProject = false"
-    :project_id="projectDetail.id.toString()"
+    :projectDetail="projectDetail"
   />
 </template>
 
@@ -76,14 +76,20 @@ import ProjectCreateModal from "@/components/project/ProjectCreateModal.vue";
 import ProjectService from "@/services/project.service";
 import UserService from "@/common/user.service";
 //type and constants
-import { ProjectCreate } from "@/views/projects/type";
-import { PROJECT_STATUS, USER_ROLE_EMPLOYEE } from "@/common/constants";
+import { ProjectCreate, Option } from "@/views/projects/type";
+import {
+  PROJECT_STATUS,
+  USER_ROLE_EMPLOYEE,
+  PROJECT_PUBLIC,
+  PROJECT_TYPE,
+  PRIORITY,
+} from "@/common/constants";
 export default defineComponent({
   name: "ProjectDetail",
   data() {
     return {
-      projectDetail: {} as ProjectCreate,
-      projectMembers: { PM: [] as string[], members: [] as string[] },
+      projectDetail: {} as any,
+      projectPM: [] as string[],
       PROJECT_STATUS,
       isManager: false,
       isShowEditProject: false,
@@ -103,13 +109,28 @@ export default defineComponent({
       const response = await ProjectService.getProjectDetail(projectId);
       if (response) {
         this.projectDetail = response.project;
+        this.projectDetail.employees = [];
         response.members.forEach((member) => {
+          const option: any = {
+            value: member.id,
+            label: member.name,
+          };
           if (member.role === USER_ROLE_EMPLOYEE) {
-            this.projectMembers.members.push(member);
+            this.projectDetail.employees.push(option);
           } else {
-            this.projectMembers.PM.push(member);
+            this.projectDetail.project_manager = option;
+            this.projectPM.push(option);
           }
         });
+        this.projectDetail.project_type = PROJECT_TYPE.find(
+          (item: any) => item.id === this.projectDetail.type
+        );
+        this.projectDetail.public = PROJECT_PUBLIC.find(
+          (item: any) => item.id === this.projectDetail.type
+        );
+        this.projectDetail.priority = PRIORITY.find(
+          (item: any) => item.id === this.projectDetail.type
+        );
       }
     },
   },

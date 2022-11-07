@@ -91,25 +91,28 @@
               <i class="bx bx-book-content nav_icon-sidebar"></i>
               <span class="nav_name">Backlogs</span>
             </router-link>
-            <a href="#" class="nav_link-sidebar">
-              <i
-                class="bx bx-briefcase-alt-2 nav_icon-sidebar"
-                :class="projectWorkPackages && 'active'"
-              ></i>
+            <router-link
+              :to="{ name: 'WorkPackages' }"
+              class="nav_link-sidebar"
+              :class="projectWorkPackages && 'active'"
+            >
+              <i class="bx bx-briefcase-alt-2 nav_icon-sidebar"></i>
               <span class="nav_name">Work packages</span>
-            </a>
-            <a href="#" class="nav_link-sidebar">
-              <i
-                class="bx bxs-book-reader nav_icon-sidebar"
-                :class="projectWiki && 'active'"
-              ></i>
+            </router-link>
+            <a
+              href="#"
+              class="nav_link-sidebar"
+              :class="projectWiki && 'active'"
+            >
+              <i class="bx bxs-book-reader nav_icon-sidebar"></i>
               <span class="nav_name">Wiki</span>
             </a>
-            <a href="#" class="nav_link-sidebar">
-              <i
-                class="bx bx-group nav_icon-sidebar"
-                :class="projectMember && 'active'"
-              ></i>
+            <a
+              href="#"
+              class="nav_link-sidebar"
+              :class="projectMember && 'active'"
+            >
+              <i class="bx bx-group nav_icon-sidebar"></i>
               <span class="nav_name">Members</span>
             </a>
           </div>
