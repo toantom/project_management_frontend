@@ -12,7 +12,7 @@
             <i class="bx bx-plus" />
           </template>
           <template class="d-none d-sm-block">
-            <i class="bx bx-plus pe-1" /> Create Backlog
+            <i class="bx bx-plus pe-1" /> Create New Backlog
           </template>
         </button>
       </div>

@@ -8,7 +8,12 @@
           class="btn btn-primary d-flex align-items-center"
           @click="isShowProjectCreate = true"
         >
-          <i class="bx bx-plus pe-1" /> Create Project
+          <template class="d-block d-sm-none">
+            <i class="bx bx-plus" />
+          </template>
+          <template class="d-none d-sm-block">
+            <i class="bx bx-plus pe-1" /> Create New Project
+          </template>
         </button>
       </div>
     </div>

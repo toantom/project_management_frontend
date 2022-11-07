@@ -1,7 +1,7 @@
 <template>
   <modal-base
-    :title="'Create New project'"
-    :primary-label="'Create'"
+    :title="projectDetail ? 'Edit Project' : 'Create New project'"
+    :primary-label="'Submit'"
     :second-label="'Cancel'"
     :close-button="true"
     :active="validate"
@@ -48,7 +48,7 @@
         </label>
         <dropdown-base
           :id="'priority'"
-          :options="priority"
+          :options="PRIORITY"
           :placeholder="'Choose priority'"
           v-model="project.priority"
           :class="errors.message?.priority ? 'is-invalid' : ''"
@@ -58,33 +58,16 @@
           {{ errors.message.priority[0] }}
         </div>
       </div>
-      <div class="col-lg-8 col-md-12">
+      <div class="col-12">
         <label for="description" class="form-label">
           Project Description
         </label>
-        <input
-          type="text"
-          class="form-control"
+        <c-k-editor-base
           id="description"
           v-model="project.project_description"
         />
       </div>
-      <div class="col-lg-4 col-md-6">
-        <label for="type" class="form-label">
-          Choose Project's type <span class="required-input">*</span>
-        </label>
-        <dropdown-base
-          :id="'type'"
-          :options="projectType"
-          :placeholder="`Choose Project's type`"
-          v-model="project.project_type"
-          :class="errors.message?.project_type ? 'is-invalid' : ''"
-        />
-        <div class="invalid-feedback" v-if="errors.message?.project_type">
-          {{ errors.message.project_type[0] }}
-        </div>
-      </div>
-      <div class="col-lg-4 col-md-6">
+      <div class="col-lg-4 col-md-6" v-if="!projectDetail">
         <label for="project-manager" class="form-label">
           Project Manager <span class="required-input">*</span>
         </label>
@@ -99,13 +82,28 @@
           {{ errors.message.project_manager[0] }}
         </div>
       </div>
-      <div class="col-lg-4 col-md-6">
+      <div class="col-md-6" :class="projectDetail ? '' : 'col-lg-4'">
+        <label for="type" class="form-label">
+          Choose Project's type <span class="required-input">*</span>
+        </label>
+        <dropdown-base
+          :id="'type'"
+          :options="PROJECT_TYPE"
+          :placeholder="`Choose Project's type`"
+          v-model="project.project_type"
+          :class="errors.message?.project_type ? 'is-invalid' : ''"
+        />
+        <div class="invalid-feedback" v-if="errors.message?.project_type">
+          {{ errors.message.project_type[0] }}
+        </div>
+      </div>
+      <div class="col-md-6" :class="projectDetail ? '' : 'col-lg-4'">
         <label for="public" class="form-label">
           Public <span class="required-input">*</span>
         </label>
         <dropdown-base
           :id="'public'"
-          :options="public"
+          :options="PROJECT_PUBLIC"
           :placeholder="'Choose Confidentiality'"
           v-model="project.public"
           :class="errors.message?.public ? 'is-invalid' : ''"
@@ -139,8 +137,8 @@
           type="date"
           class="form-control"
           id="end-date"
-          :min="minEnd"
-          :readonly="minEnd === ''"
+          :min="project.start_date"
+          :readonly="project.start_date === ''"
           v-model="project.end_date"
           :class="errors.message?.end_date ? 'is-invalid' : ''"
         />
@@ -154,7 +152,7 @@
           :id="'employee'"
           :options="listEmployee"
           :placeholer="'Choose employee'"
-          v-model="project.employee"
+          v-model="project.employees"
           :placeholder="'Choose Employee'"
           :closeOnSelect="false"
           multiple
@@ -170,8 +168,9 @@ import { defineComponent } from "vue";
 //components
 import ModalBase from "@/components/base/ModalBase.vue";
 import DropdownBase from "@/components/base/DropdownBase.vue";
+import CKEditorBase from "@/components/base/CKEditorBase.vue";
 // type
-import { Option, ProjectCreate } from "@/views/projects/type";
+import { Option } from "@/views/projects/type";
 import ProjectService from "@/services/project.service";
 import { User } from "@/components/account/type";
 import { mapGetters } from "vuex";
@@ -179,34 +178,28 @@ import UserService from "@/common/user.service";
 import { useToast } from "vue-toastification";
 import { store } from "@/store";
 import { SET_ERROR } from "@/store/mutations.types";
-
+import { PRIORITY, PROJECT_TYPE, PROJECT_PUBLIC } from "@/common/constants";
 export default defineComponent({
   name: "ProjectCreateModal",
   components: {
     ModalBase,
     DropdownBase,
+    CKEditorBase,
   },
-  emits: ["save", "close"],
+  emits: ["close"],
   data() {
     const vn_datetime_str = new Date().toLocaleDateString("vn").split("/");
-    const minStartDay = `${vn_datetime_str[2]}-${vn_datetime_str[1]}-${vn_datetime_str[0]}`;
+    const minStartDay = `${vn_datetime_str[2]}-${vn_datetime_str[1]}-${
+      vn_datetime_str[0].length === 1
+        ? "0" + vn_datetime_str[0]
+        : vn_datetime_str[0]
+    }`;
     return {
       open: true,
-      priority: [
-        { value: 1, label: "Low" },
-        { value: 2, label: "Medium" },
-        { value: 3, label: "High" },
-      ],
-      projectType: [
-        { value: 1, label: "Project Base" },
-        { value: 2, label: "Labo" },
-      ],
-      public: [
-        { value: 1, label: "Public" },
-        { value: 0, label: "Private" },
-      ],
+      PRIORITY,
+      PROJECT_TYPE,
+      PROJECT_PUBLIC,
       minStart: minStartDay,
-      minEnd: "",
       loadingSearchEmployee: false,
       project: {
         title: "",
@@ -220,22 +213,14 @@ export default defineComponent({
         status: null,
         public: null,
         created_by_id: "",
-        employee: null,
-      } as ProjectCreate,
+        employees: [],
+      } as any,
       listEmployee: [] as object[],
       listManager: [] as object[],
     };
   },
   props: {
-    project_id: {
-      type: String,
-      default: "",
-    },
-  },
-  watch: {
-    "project.start_date"(newVal) {
-      this.minEnd = newVal;
-    },
+    projectDetail: Object,
   },
   async mounted() {
     // eslint-disable-next-line
@@ -244,9 +229,8 @@ export default defineComponent({
     // eslint-disable-next-line
     const managers: any = await ProjectService.getManagerList();
     this.getListMember(managers, this.listManager);
-    if (this.project_id) {
-      const response = await ProjectService.getProjectDetail(this.project_id);
-      this.project = response.project;
+    if (this.projectDetail) {
+      this.project = this.projectDetail;
     }
   },
   beforeUnmount() {
@@ -277,9 +261,6 @@ export default defineComponent({
       if (!project.end_date || project.end_date == "") {
         errors.end_date = "This is required";
       }
-      if (project.end_date < project.start_date) {
-        errors.end_date = "End date mush greater than start date";
-      }
       if (!project.project_manager) {
         errors.project_manager = "This is required";
       }
@@ -295,7 +276,7 @@ export default defineComponent({
       const project = this.project;
       const employeeIds: object[] = [];
       // eslint-disable-next-line
-      project.employee?.forEach((item: any) => {
+      project.employees?.forEach((item: any) => {
         return employeeIds.push(item.value);
       });
 
@@ -317,13 +298,23 @@ export default defineComponent({
     },
     async save() {
       const data = this.getPostData();
-      await ProjectService.createProject(data).then((res) => {
-        if (this.errors === "" && res.result === "ok") {
-          const toast = useToast();
-          toast.success("Create Project Successful");
-          this.open = false;
-        }
-      });
+      this.projectDetail
+        ? await ProjectService.editProject(this.projectDetail.id, data).then(
+            (res) => {
+              if (this.errors === "" && res.result === "ok") {
+                const toast = useToast();
+                toast.success("Update Project Successful");
+                this.open = false;
+              }
+            }
+          )
+        : await ProjectService.createProject(data).then((res) => {
+            if (res.result === "ok") {
+              const toast = useToast();
+              toast.success("Create Project Successful");
+              this.open = false;
+            }
+          });
     },
     // eslint-disable-next-line
     getListMember(object: any, list: object[]) {

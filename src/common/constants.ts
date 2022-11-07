@@ -17,3 +17,26 @@ export const PROJECT_STATUS = {
   1: "On Track",
   2: "Maintenance",
 };
+
+export const PRIORITY = [
+  { value: 1, label: "Low" },
+  { value: 2, label: "Medium" },
+  { value: 3, label: "High" },
+];
+
+export const TASK_TYPE = [
+  { value: 1, label: "User Story" },
+  { value: 2, label: "Task" },
+  { value: 3, label: "Bug" },
+];
+
+export const PROJECT_TYPE = [
+  { value: 1, label: "Project Base" },
+  { value: 2, label: "Labo" },
+];
+export const PROJECT_PUBLIC = [
+  { value: 1, label: "Public" },
+  { value: 0, label: "Private" },
+];
+
+export const DEFAULT_PAGE = 1;

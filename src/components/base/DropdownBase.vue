@@ -55,8 +55,9 @@ export default defineComponent({
     margin-top: 0;
   }
   .vs__dropdown-menu {
-    border-radius: 0.375rem;
+    border-radius: 0.375rem !important;
   }
+  --vs-dropdown-max-height: 200px;
 }
 .vs--open .vs__dropdown-toggle {
   color: #212529;
