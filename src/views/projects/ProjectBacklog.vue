@@ -23,7 +23,7 @@
         :key="index"
         class="col-lg-4 col-md-6 col-sm-12"
       >
-        <project-backlog-card :backlog="backlog" />
+        <project-backlog-card :backlog="backlog" :key="componentKey" />
       </div>
     </div>
     <pagination-base :value="page" :pageCount="pages" @input="toPage" />
@@ -59,6 +59,7 @@ export default defineComponent({
       total: 0,
       isManager: false,
       isShowBacklogCreate: false,
+      componentKey: 0,
     };
   },
   components: {
@@ -89,7 +90,7 @@ export default defineComponent({
       this.getListBacklog(this.page);
     },
     async getListBacklog(page: number) {
-      const project_id = Number(this.$route.params.project_id);
+      const project_id = this.$route.params.project_id.toString();
       const response = await BacklogService.getListBacklog(page, 6, project_id);
       if (response) {
         const { per_page, current_page, total } = response.backlogs;
@@ -97,6 +98,7 @@ export default defineComponent({
 
         this.page = current_page;
         this.pages = Math.ceil(total / per_page);
+        this.componentKey += 1;
       }
     },
     async toPage(page: number) {

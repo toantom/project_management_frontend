@@ -11,7 +11,7 @@ export default {
   getListBacklog(
     page = 1,
     limit = 10,
-    project_id: number
+    project_id: string
     // eslint-disable-next-line
   ): Promise<any | void> {
     return ApiService.get(API_BACKLOGS, {

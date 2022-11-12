@@ -5,7 +5,6 @@
     :options="options"
     :placeholder="placeholder"
     :filterable="filterable"
-    @search="$emit('search')"
   >
   </v-select>
 </template>
@@ -15,12 +14,6 @@ import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "DropdownBase",
-  data() {
-    return {
-      search: "",
-      toggleSearch: false,
-    };
-  },
   props: {
     id: String,
     options: Array,
@@ -30,7 +23,6 @@ export default defineComponent({
       default: true,
     },
   },
-  emits: ["search"],
 });
 </script>
 

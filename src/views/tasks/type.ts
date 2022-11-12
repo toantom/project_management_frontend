@@ -11,9 +11,10 @@ export interface TaskCreate {
   type: Option | null;
   created_by: string;
   updated_by: string;
-  parent: number | null;
+  parent_id: number | null;
   backlog_id: Option | null;
   priority: Option | null;
   progress: number;
-  project_id: number;
+  project_id: string;
+  status: Option | null;
 }

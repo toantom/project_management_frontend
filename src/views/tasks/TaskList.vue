@@ -15,6 +15,32 @@
         </template>
       </button>
     </div>
+    <div>
+      <table class="table table-bordered table-hover table-responsive">
+        <thead class="table-secondary">
+          <tr>
+            <th class="column-id">ID</th>
+            <th class="column-title">Title</th>
+            <th class="column-status">Status</th>
+            <th class="column-assignee">Assignee</th>
+            <th class="column-backlog">Backlog</th>
+            <th class="column-date">Start Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <task-list-item
+            v-for="task in tasks"
+            :key="task"
+            :tasks="task.children"
+            :task="task"
+            :depth="task.depth"
+            :list-employee="listEmployee"
+            :list-backlog="listBacklog"
+          />
+        </tbody>
+      </table>
+      <pagination-base :value="page" :pageCount="pages" @input="toPage" />
+    </div>
   </div>
   <task-create-modal
     v-if="isShowTaskCreate"
@@ -24,17 +50,117 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+//components
 import TaskCreateModal from "@/components/task/TaskCreateModal.vue";
+import TaskListItem from "@/components/task/TaskListItem.vue";
+import PaginationBase from "@/components/base/PaginationBase.vue";
+//services
+import TaskService from "@/services/task.service";
+import BacklogService from "@/services/backlog.service";
+import ProjectService from "@/services/project.service";
+//types and constants
+import { SET_CANCEL_LOADING, SET_LOADING } from "@/store/mutations.types";
+import { User } from "@/components/account/type";
+import { Option } from "@/views/projects/type";
+import { DEFAULT_PAGE } from "@/common/constants";
+import { mapGetters } from "vuex";
 
 export default defineComponent({
   name: "TaskList",
   data() {
     return {
       isShowTaskCreate: false,
+      projectId: "",
+      page: 1,
+      pages: 0,
+      total: 0,
+      limit: 10,
+      tasks: [] as any,
+      listEmployee: [] as object[],
+      listBacklog: [] as object[],
+      isShowListTask: 0,
     };
   },
   components: {
     TaskCreateModal,
+    TaskListItem,
+    PaginationBase,
+  },
+  computed: {
+    ...mapGetters(["project"]),
+  },
+  watch: {
+    $route(to) {
+      if (to.name === "WorkPackages") {
+        this.page = Number(this.$route.query.page || 1);
+        this.viewTasks(this.page);
+      }
+    },
+  },
+  async mounted() {
+    this.$store.commit(SET_LOADING, true);
+    this.projectId = this.$route.params.project_id.toString();
+    await ProjectService.getProjectDetail(this.projectId);
+    await this.viewTasks(this.page);
+    const employees: any = await ProjectService.getProjectEmployee(
+      this.projectId
+    );
+    this.getList(employees, this.listEmployee, "name");
+    const backlogs = await BacklogService.getListBacklog(
+      DEFAULT_PAGE,
+      0,
+      this.projectId
+    );
+    this.getList(backlogs.backlogs.data, this.listBacklog, "backlog_title");
+    this.$store.commit(SET_CANCEL_LOADING, false);
+  },
+  methods: {
+    async viewTasks(page: number) {
+      const data = {
+        project_id: this.project.id,
+        page: page,
+        limit: this.limit,
+      };
+      const response = await TaskService.viewTasks(data);
+      if (response) {
+        const { per_page, current_page, total } = response.paginate;
+        this.tasks = response.tasks;
+
+        this.page = current_page;
+        this.pages = Math.ceil(total / per_page);
+      }
+    },
+    getList(object: any, list: object[], label: string) {
+      if (object) {
+        object.forEach((item: User) => {
+          const option: Option = { value: item.id, label: item[label] };
+          list.push(option);
+        });
+      }
+    },
+    async toPage(page: number) {
+      this.$router.push({
+        name: this.$route.name || "",
+        query: { page: page },
+      });
+    },
   },
 });
 </script>
+<style lang="scss" scoped>
+.task-list {
+  .table {
+    .column-id {
+      width: 5%;
+    }
+    .column-title {
+      width: 35%;
+    }
+    .column-status,
+    .column-assignee,
+    .column-backlog {
+      width: 17%;
+    }
+  }
+}
+</style>

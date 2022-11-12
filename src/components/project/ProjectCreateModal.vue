@@ -178,7 +178,12 @@ import UserService from "@/common/user.service";
 import { useToast } from "vue-toastification";
 import { store } from "@/store";
 import { SET_ERROR } from "@/store/mutations.types";
-import { PRIORITY, PROJECT_TYPE, PROJECT_PUBLIC } from "@/common/constants";
+import {
+  PRIORITY,
+  PROJECT_TYPE,
+  PROJECT_PUBLIC,
+  USER_ROLE_EMPLOYEE,
+} from "@/common/constants";
 export default defineComponent({
   name: "ProjectCreateModal",
   components: {
@@ -186,7 +191,7 @@ export default defineComponent({
     DropdownBase,
     CKEditorBase,
   },
-  emits: ["close"],
+  emits: ["close", "updateProject"],
   data() {
     const vn_datetime_str = new Date().toLocaleDateString("vn").split("/");
     const minStartDay = `${vn_datetime_str[2]}-${vn_datetime_str[1]}-${
@@ -195,12 +200,11 @@ export default defineComponent({
         : vn_datetime_str[0]
     }`;
     return {
-      open: true,
+      open: false,
       PRIORITY,
       PROJECT_TYPE,
       PROJECT_PUBLIC,
       minStart: minStartDay,
-      loadingSearchEmployee: false,
       project: {
         title: "",
         short_name: "",
@@ -221,6 +225,7 @@ export default defineComponent({
   },
   props: {
     projectDetail: Object,
+    projectId: String,
   },
   async mounted() {
     // eslint-disable-next-line
@@ -229,8 +234,33 @@ export default defineComponent({
     // eslint-disable-next-line
     const managers: any = await ProjectService.getManagerList();
     this.getListMember(managers, this.listManager);
-    if (this.projectDetail) {
-      this.project = this.projectDetail;
+    if (this.projectId) {
+      const response = await ProjectService.getProjectDetail(this.projectId);
+      if (response) {
+        this.project = response.project;
+        this.project.employees = [];
+        response.members.forEach((member) => {
+          const option: any = {
+            value: member.id,
+            label: member.name,
+          };
+          if (member.role === USER_ROLE_EMPLOYEE) {
+            this.project.employees.push(option);
+          } else {
+            this.project.project_manager = option;
+          }
+        });
+        this.project.project_type = PROJECT_TYPE.find(
+          (item: any) => item.value === this.project.project_type
+        );
+        this.project.public = PROJECT_PUBLIC.find(
+          (item: any) => item.value === this.project.public
+        );
+        this.project.priority = PRIORITY.find(
+          (item: any) => item.value === this.project.priority
+        );
+        this.open = true;
+      }
     }
   },
   beforeUnmount() {
@@ -305,6 +335,7 @@ export default defineComponent({
                 const toast = useToast();
                 toast.success("Update Project Successful");
                 this.open = false;
+                this.$emit("updateProject", this.project);
               }
             }
           )

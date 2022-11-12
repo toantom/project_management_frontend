@@ -99,14 +99,14 @@
               <i class="bx bx-briefcase-alt-2 nav_icon-sidebar"></i>
               <span class="nav_name">Work packages</span>
             </router-link>
-            <a
-              href="#"
-              class="nav_link-sidebar"
-              :class="projectWiki && 'active'"
-            >
-              <i class="bx bxs-book-reader nav_icon-sidebar"></i>
-              <span class="nav_name">Wiki</span>
-            </a>
+            <!--            <a-->
+            <!--              href="#"-->
+            <!--              class="nav_link-sidebar"-->
+            <!--              :class="projectWiki && 'active'"-->
+            <!--            >-->
+            <!--              <i class="bx bxs-book-reader nav_icon-sidebar"></i>-->
+            <!--              <span class="nav_name">Wiki</span>-->
+            <!--            </a>-->
             <a
               href="#"
               class="nav_link-sidebar"

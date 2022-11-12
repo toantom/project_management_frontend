@@ -8,6 +8,7 @@ import {
   API_PROJECTS,
   API_GET_MANAGER_PROJECT,
   API_PROJECT_DETAIL,
+  API_GET_PROJECT_EMPLOYEE,
 } from "@/common/api.constants";
 import { store } from "@/store";
 import { SET_ERROR, SET_PROJECT } from "@/store/mutations.types";
@@ -74,6 +75,17 @@ export default {
     )
       .then((response: AxiosResponse) => {
         store.commit(SET_PROJECT, response.data.project);
+        return response.data;
+      })
+      .catch((error: AxiosError) => {
+        store.commit(SET_ERROR, error);
+      });
+  },
+  getProjectEmployee(project_id: string): Promise<any | void> {
+    return ApiService.get(
+      API_GET_PROJECT_EMPLOYEE.replace("<project_id>", project_id)
+    )
+      .then((response: AxiosResponse) => {
         return response.data;
       })
       .catch((error: AxiosError) => {
