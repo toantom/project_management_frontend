@@ -228,11 +228,11 @@ export default defineComponent({
         type: null,
         created_by: "",
         updated_by: "",
-        parent: null,
+        parent_id: null,
         backlog_id: null,
         priority: null,
         progress: 0,
-        project_id: 0,
+        project_id: "",
       } as TaskCreate,
       TASK_TYPE,
       PRIORITY,
@@ -264,7 +264,7 @@ export default defineComponent({
     // eslint-disable-next-line
     const employees: any = await ProjectService.getEmployeeList();
     this.getList(employees, this.listEmployee, "name");
-    this.task.project_id = Number(this.$route.params.project_id);
+    this.task.project_id = this.$route.params.project_id.toString();
     const backlogs = await BacklogService.getListBacklog(
       DEFAULT_PAGE,
       0,
@@ -292,11 +292,12 @@ export default defineComponent({
         type: task.type?.value || null,
         created_by: this.user.id,
         updated_by: this.user.id,
-        parent: 0,
+        parent_id: task.parent_id,
         backlog_id: task.backlog_id?.value || null,
         priority: task.priority?.value || null,
         progress: task.progress || 0,
         project_id: task.project_id,
+        status: 1,
       };
     },
     async save() {

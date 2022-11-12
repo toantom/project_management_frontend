@@ -9,6 +9,7 @@ export const API_PROJECTS = "/projects";
 export const API_PROJECT_DETAIL = "/projects/<project_id>";
 export const API_GET_EMPLOYEE_PROJECT = "/projects/get_employee";
 export const API_GET_MANAGER_PROJECT = "/projects/get_manager";
+export const API_GET_PROJECT_EMPLOYEE = "/projects/<project_id>/get_employee";
 //admin
 export const API_ADMIN_GET_LIST_EMPLOYEES = "/admin/get_list_employees";
 export const API_ADMIN_UPDATE_EMPLOYEE_INFO =

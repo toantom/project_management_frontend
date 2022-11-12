@@ -14,7 +14,7 @@ const ApiService = () => {
 
   // Create instance
   const instance = axios.create(defaultOptions);
-
+  axios.defaults.withCredentials = true;
   // Set the AUTH token for any request
   instance.interceptors.request.use(function (config) {
     const token = JwtService.getToken();

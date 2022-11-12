@@ -17,7 +17,7 @@
         </button>
       </div>
     </div>
-    <div class="row w-100 mt-4">
+    <div class="row w-100 mt-4 mx-0">
       <div class="tab-info col-lg-4 col-md-6 col-sm-12">
         <div class="card">
           <div class="card-body">
@@ -63,7 +63,9 @@
   <project-create-modal
     v-if="isShowEditProject"
     @close="isShowEditProject = false"
-    :projectDetail="projectDetail"
+    :project-detail="projectDetail"
+    :project-id="projectId"
+    @updateProject="updateProjectInfo"
   />
 </template>
 
@@ -76,14 +78,8 @@ import ProjectCreateModal from "@/components/project/ProjectCreateModal.vue";
 import ProjectService from "@/services/project.service";
 import UserService from "@/common/user.service";
 //type and constants
-import { ProjectCreate, Option } from "@/views/projects/type";
-import {
-  PROJECT_STATUS,
-  USER_ROLE_EMPLOYEE,
-  PROJECT_PUBLIC,
-  PROJECT_TYPE,
-  PRIORITY,
-} from "@/common/constants";
+import { PROJECT_STATUS, USER_ROLE_EMPLOYEE } from "@/common/constants";
+import { SET_LOADING } from "@/store/mutations.types";
 export default defineComponent({
   name: "ProjectDetail",
   data() {
@@ -100,10 +96,16 @@ export default defineComponent({
     ProjectCreateModal,
   },
   async mounted() {
+    this.$store.commit(SET_LOADING, true);
     await this.getProjectDetail();
     this.isManager = UserService.isManagerRole();
+    this.$store.commit(SET_LOADING, false);
   },
   methods: {
+    updateProjectInfo(data: any) {
+      this.projectDetail = data;
+      this.projectPM = [data.project_manager];
+    },
     async getProjectDetail() {
       const projectId = this.$route.params.project_id.toString();
       const response = await ProjectService.getProjectDetail(projectId);
@@ -118,19 +120,10 @@ export default defineComponent({
           if (member.role === USER_ROLE_EMPLOYEE) {
             this.projectDetail.employees.push(option);
           } else {
-            this.projectDetail.project_manager = option;
             this.projectPM.push(option);
+            this.projectDetail.project_manager = option;
           }
         });
-        this.projectDetail.project_type = PROJECT_TYPE.find(
-          (item: any) => item.id === this.projectDetail.type
-        );
-        this.projectDetail.public = PROJECT_PUBLIC.find(
-          (item: any) => item.id === this.projectDetail.type
-        );
-        this.projectDetail.priority = PRIORITY.find(
-          (item: any) => item.id === this.projectDetail.type
-        );
       }
     },
   },

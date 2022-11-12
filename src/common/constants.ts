@@ -39,4 +39,11 @@ export const PROJECT_PUBLIC = [
   { value: 0, label: "Private" },
 ];
 
+export const TASK_STATUS = [
+  { value: 1, label: "New" },
+  { value: 2, label: "In progress" },
+  { value: 3, label: "Done" },
+  { value: 4, label: "Close" },
+];
+
 export const DEFAULT_PAGE = 1;

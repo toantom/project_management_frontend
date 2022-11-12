@@ -15,15 +15,16 @@
         <div
           class="progress-bar"
           role="progressbar"
-          style="width: 50%"
-          aria-valuenow="50"
+          :style="`width: ${progress}%`"
+          :aria-valuenow="backlog.done_task"
           aria-valuemin="0"
-          aria-valuemax="100"
+          :aria-valuemax="backlog.tasks_count"
         ></div>
       </div>
       <div class="mt-3">
         <span class="text1">
-          32 tasks Done <span class="text2">of 50 total tasks</span>
+          {{ backlog.done_task }} tasks Done
+          <span class="text2">of {{ backlog.tasks_count }} total tasks</span>
         </span>
       </div>
     </div>
@@ -37,6 +38,20 @@ export default defineComponent({
   name: "ProjectBacklogCard",
   props: {
     backlog: Object,
+  },
+  data() {
+    return {
+      progress: 0,
+    };
+  },
+  mounted() {
+    this.calProgress();
+  },
+  methods: {
+    calProgress() {
+      this.progress =
+        ((this.backlog?.done_task / this.backlog?.tasks_count) * 100) | 0;
+    },
   },
 });
 </script>
@@ -79,7 +94,7 @@ export default defineComponent({
   }
 
   .progress div {
-    background-color: red;
+    background-color: #4723d9;
   }
 
   .text1 {
