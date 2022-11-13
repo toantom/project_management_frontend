@@ -77,9 +77,19 @@ const routes = [
             component: () => import("../views/projects/ProjectBacklog.vue"),
           },
           {
+            path: "backlog/:backlog_id",
+            name: "BacklogDetail",
+            component: () => import("../views/projects/BacklogDetail.vue"),
+          },
+          {
             path: "work_packages",
             name: "WorkPackages",
             component: () => import("../views/tasks/TaskList.vue"),
+          },
+          {
+            path: "work_packages/:task_id",
+            name: "TaskDetail",
+            component: () => import("../views/tasks/TaskDetail.vue"),
           },
         ],
       },

@@ -142,21 +142,6 @@
         <hr class="form--separator" />
         <div class="row">
           <div class="col-md-6 col-12">
-            <label for="progress" class="form-label"> Progress (%) </label>
-            <input
-              type="number"
-              class="form-control"
-              id="progress"
-              max="100"
-              min="0"
-              v-model="task.progress"
-              :class="errors.errors?.progress ? 'is-invalid' : ''"
-            />
-            <div class="invalid-feedback" v-if="errors.errors?.progress">
-              {{ errors.errors.progress[0] }}
-            </div>
-          </div>
-          <div class="col-md-6 col-12">
             <label for="backlog" class="form-label"> Backlog </label>
             <dropdown-base
               :id="'backlog'"
@@ -180,6 +165,21 @@
             />
             <div class="invalid-feedback" v-if="errors.errors?.priority">
               {{ errors.errors.priority[0] }}
+            </div>
+          </div>
+          <div class="col-md-6 col-12">
+            <label for="progress" class="form-label"> Progress (%) </label>
+            <input
+              type="number"
+              class="form-control"
+              id="progress"
+              max="100"
+              min="0"
+              v-model="task.progress"
+              :class="errors.errors?.progress ? 'is-invalid' : ''"
+            />
+            <div class="invalid-feedback" v-if="errors.errors?.progress">
+              {{ errors.errors.progress[0] }}
             </div>
           </div>
         </div>
@@ -262,9 +262,11 @@ export default defineComponent({
   },
   async mounted() {
     // eslint-disable-next-line
-    const employees: any = await ProjectService.getEmployeeList();
-    this.getList(employees, this.listEmployee, "name");
     this.task.project_id = this.$route.params.project_id.toString();
+    const employees = await ProjectService.getProjectEmployee(
+      this.task.project_id
+    );
+    this.getList(employees, this.listEmployee, "name");
     const backlogs = await BacklogService.getListBacklog(
       DEFAULT_PAGE,
       0,

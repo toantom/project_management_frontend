@@ -5,6 +5,7 @@
     :options="options"
     :placeholder="placeholder"
     :filterable="filterable"
+    @option:selected="$emit('change')"
   >
   </v-select>
 </template>
@@ -23,6 +24,7 @@ export default defineComponent({
       default: true,
     },
   },
+  emits: ["change"],
 });
 </script>
 

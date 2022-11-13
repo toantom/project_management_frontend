@@ -71,6 +71,7 @@
               }"
               class="nav_link-sidebar"
               :class="ProjectDetail && 'active'"
+              title="Project Overview"
             >
               <i class="bx bx-info-circle nav_icon-sidebar"></i>
               <span class="nav_name">Overview</span>
@@ -79,6 +80,7 @@
               href="#"
               class="nav_link-sidebar"
               :class="projectDashboard && 'active'"
+              title="Project Dashboard"
             >
               <i class="bx bx-grid-alt nav_icon-sidebar"></i>
               <span class="nav_name">Dashboard</span>
@@ -87,6 +89,7 @@
               :to="{ name: 'ProjectBacklog' }"
               class="nav_link-sidebar"
               :class="projectBacklog && 'active'"
+              title="Project Backlog"
             >
               <i class="bx bx-book-content nav_icon-sidebar"></i>
               <span class="nav_name">Backlogs</span>
@@ -95,6 +98,7 @@
               :to="{ name: 'WorkPackages' }"
               class="nav_link-sidebar"
               :class="projectWorkPackages && 'active'"
+              title="Project Work Packages"
             >
               <i class="bx bx-briefcase-alt-2 nav_icon-sidebar"></i>
               <span class="nav_name">Work packages</span>
@@ -111,6 +115,7 @@
               href="#"
               class="nav_link-sidebar"
               :class="projectMember && 'active'"
+              title="Project Members "
             >
               <i class="bx bx-group nav_icon-sidebar"></i>
               <span class="nav_name">Members</span>
@@ -154,6 +159,7 @@ import UserService from "@/common/user.service";
 import { mapGetters } from "vuex";
 import { store } from "@/store";
 import { SET_PROJECT } from "@/store/mutations.types";
+import ProjectService from "@/services/project.service";
 export default defineComponent({
   name: "HeaderBase",
   components: {
@@ -187,7 +193,7 @@ export default defineComponent({
       return this.$route.name === "ProjectBacklog";
     },
     projectWorkPackages(): boolean {
-      return this.$route.name === "ProjectWorkPackages";
+      return this.$route.name === "WorkPackages";
     },
     projectWiki(): boolean {
       return this.$route.name === "ProjectWiki";
@@ -198,6 +204,12 @@ export default defineComponent({
   },
   mounted() {
     this.isEmployee = !UserService.isAdminType();
+    if (
+      this.$route.fullPath.includes("projects/") &&
+      !Object.keys(this.project).length
+    ) {
+      ProjectService.getProjectDetail(this.$route.params.project_id.toString());
+    }
   },
   methods: {
     showModalLogOut() {
@@ -333,6 +345,7 @@ export default defineComponent({
   #body-pd {
     margin: calc(var(--header-height) + 1rem) 0 0 0 !important;
     padding-left: calc(var(--nav-width) + 2rem);
+    min-height: calc(100vh - 65px) !important;
   }
   .header-root {
     height: calc(var(--header-height) + 1rem);

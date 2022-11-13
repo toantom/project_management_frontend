@@ -33,8 +33,6 @@ export interface Backlog {
 
 export interface BacklogCreate {
   backlog_title: string;
-  project_id: number | null;
   start_date: string;
   end_date: string;
-  created_by: string;
 }

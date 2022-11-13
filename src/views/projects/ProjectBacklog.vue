@@ -47,7 +47,7 @@ import UserService from "@/common/user.service";
 //constants and types
 import { SET_CANCEL_LOADING, SET_LOADING } from "@/store/mutations.types";
 import { Backlog } from "@/views/projects/type";
-import ProjectService from "@/services/project.service";
+import { mapGetters } from "vuex";
 
 export default defineComponent({
   name: "ProjectBacklog",
@@ -74,11 +74,12 @@ export default defineComponent({
       }
     },
   },
+  computed: {
+    ...mapGetters(["project"]),
+  },
   async mounted() {
     this.$store.commit(SET_LOADING, true);
     this.isManager = UserService.isManagerRole();
-    const projectId = this.$route.params.project_id.toString();
-    await ProjectService.getProjectDetail(projectId);
     this.getListWithPageURL();
     if (this.backlogs) {
       this.$store.commit(SET_CANCEL_LOADING, false);
@@ -90,8 +91,12 @@ export default defineComponent({
       this.getListBacklog(this.page);
     },
     async getListBacklog(page: number) {
-      const project_id = this.$route.params.project_id.toString();
-      const response = await BacklogService.getListBacklog(page, 6, project_id);
+      const response = await BacklogService.getListBacklog(
+        page,
+        6,
+        this.project.id
+      );
+
       if (response) {
         const { per_page, current_page, total } = response.backlogs;
         this.backlogs = response.backlogs.data;

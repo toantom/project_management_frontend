@@ -1,7 +1,7 @@
 <template>
   <modal-base
     :title="'Create New Backlog'"
-    :primary-label="'Create'"
+    :primary-label="this.backlogDetail ? 'Update' : 'Create'"
     :second-label="'Cancel'"
     :close-button="true"
     :active="validate"
@@ -83,7 +83,7 @@ export default defineComponent({
   components: {
     ModalBase,
   },
-  emits: ["save", "close", "createSuccess"],
+  emits: ["save", "close", "createSuccess", "updateBacklog"],
   data() {
     const vn_datetime_str = new Date().toLocaleDateString("vn").split("/");
     const minStartDay = `${vn_datetime_str[2]}-${vn_datetime_str[1]}-${vn_datetime_str[0]}`;
@@ -93,17 +93,17 @@ export default defineComponent({
       minEnd: "",
       backlog: {
         backlog_title: "",
-        project_id: null,
         start_date: "",
         end_date: "",
-        created_by: "",
       } as BacklogCreate,
     };
+  },
+  props: {
+    backlogDetail: Object,
   },
   watch: {
     "backlog.start_date"(newVal) {
       this.minEnd = newVal;
-      this.backlog.end_date = "";
     },
   },
   beforeUnmount() {
@@ -111,8 +111,17 @@ export default defineComponent({
       store.commit(SET_ERROR, { response: { data: "" } });
     }
   },
+  mounted() {
+    if (this.backlogDetail) {
+      this.backlog = {
+        backlog_title: this.backlogDetail.backlog_title,
+        start_date: this.backlogDetail.start_date,
+        end_date: this.backlogDetail.end_date,
+      };
+    }
+  },
   computed: {
-    ...mapGetters(["user", "errors"]),
+    ...mapGetters(["user", "errors", "project"]),
     validate(): boolean {
       const backlog = this.backlog;
       const errors = {} as { [key: string]: string | number };
@@ -131,29 +140,39 @@ export default defineComponent({
   methods: {
     getPostData() {
       const user = UserService.getUser();
-      const project_id = this.$route.params.project_id;
       const backlog = this.backlog;
 
       return {
         backlog_title: backlog.backlog_title,
         start_date: backlog.start_date,
         end_date: backlog.end_date,
-        project_id: project_id,
+        project_id: this.project.id,
         created_by: user.id,
-        updated_by: user.id,
       };
     },
     async save() {
       const data = this.getPostData();
-      await BacklogService.createBacklog(data).then((res) => {
-        if (res.result === "ok") {
-          store.commit(SET_ERROR, { response: { data: "" } });
-          const toast = useToast();
-          toast.success("Create Backlog Successful");
-          this.open = false;
-          this.$emit("createSuccess");
-        }
-      });
+      this.backlogDetail
+        ? await BacklogService.editBacklog(data, this.backlogDetail.id).then(
+            (res) => {
+              if (res.result === "ok") {
+                store.commit(SET_ERROR, { response: { data: "" } });
+                const toast = useToast();
+                toast.success("Update Backlog Successful");
+                this.open = false;
+                this.$emit("updateBacklog", this.backlog);
+              }
+            }
+          )
+        : await BacklogService.createBacklog(data).then((res) => {
+            if (res.result === "ok") {
+              store.commit(SET_ERROR, { response: { data: "" } });
+              const toast = useToast();
+              toast.success("Create Backlog Successful");
+              this.open = false;
+              this.$emit("createSuccess");
+            }
+          });
     },
   },
 });

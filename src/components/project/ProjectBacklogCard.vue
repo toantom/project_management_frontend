@@ -1,5 +1,5 @@
 <template>
-  <div class="card p-3 mb-md-4 mb-2">
+  <div class="card p-3 mb-md-4 mb-2" @click="backlogDetail">
     <div class="d-flex justify-content-between">
       <div class="d-flex flex-row align-items-center">
         <div class="icon"><i class="bx bxl-mailchimp"></i></div>
@@ -23,7 +23,7 @@
       </div>
       <div class="mt-3">
         <span class="text1">
-          {{ backlog.done_task }} tasks Done
+          {{ backlog.done_task }} tasks Close
           <span class="text2">of {{ backlog.tasks_count }} total tasks</span>
         </span>
       </div>
@@ -52,12 +52,19 @@ export default defineComponent({
       this.progress =
         ((this.backlog?.done_task / this.backlog?.tasks_count) * 100) | 0;
     },
+    backlogDetail() {
+      this.$router.push({
+        name: "BacklogDetail",
+        params: { backlog_id: this.backlog?.id },
+      });
+    },
   },
 });
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .card {
+  cursor: pointer;
   border: none;
   border-radius: 10px;
   .c-details span {

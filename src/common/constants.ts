@@ -28,6 +28,7 @@ export const TASK_TYPE = [
   { value: 1, label: "User Story" },
   { value: 2, label: "Task" },
   { value: 3, label: "Bug" },
+  { value: 4, label: "Bug UAT" },
 ];
 
 export const PROJECT_TYPE = [
