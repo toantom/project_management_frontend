@@ -14,12 +14,12 @@ body {
 }
 #body-pd {
   transition: 0.5s;
-  min-height: calc(100vh - 65px);
+  min-height: calc(100vh - 50px);
   margin: 3rem 0 0 0;
   a {
     text-decoration: none;
   }
-  @media (min-height: 768px) {
+  @media screen and (max-height: 768px) {
     margin: 4rem 0 0 0;
   }
 }

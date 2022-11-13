@@ -92,20 +92,23 @@ export default defineComponent({
   watch: {
     $route(to) {
       if (to.name === "ProjectList") {
-        this.page = Number(this.$route.query.page || 1);
-        this.getListProjects(this.page);
+        this.getListWithPageURL();
       }
     },
   },
   async mounted() {
     this.$store.commit(SET_LOADING, true);
     this.isManager = UserService.isManagerRole();
-    await this.getListProjects(this.page);
+    this.getListWithPageURL();
     if (this.projects) {
       this.$store.commit(SET_CANCEL_LOADING, false);
     }
   },
   methods: {
+    getListWithPageURL() {
+      this.page = Number(this.$route.query.page || 1);
+      this.getListProjects(this.page);
+    },
     async getListProjects(page: number) {
       const response = await ProjectService.getListProjects(page);
       if (response) {

@@ -25,6 +25,7 @@
             <th class="column-assignee">Assignee</th>
             <th class="column-backlog">Backlog</th>
             <th class="column-date">Start Date</th>
+            <th class="column-date">End Date</th>
           </tr>
         </thead>
         <tbody>
@@ -70,7 +71,6 @@ export default defineComponent({
   data() {
     return {
       isShowTaskCreate: false,
-      projectId: "",
       page: 1,
       pages: 0,
       total: 0,
@@ -78,7 +78,6 @@ export default defineComponent({
       tasks: [] as any,
       listEmployee: [] as object[],
       listBacklog: [] as object[],
-      isShowListTask: 0,
     };
   },
   components: {
@@ -92,29 +91,30 @@ export default defineComponent({
   watch: {
     $route(to) {
       if (to.name === "WorkPackages") {
-        this.page = Number(this.$route.query.page || 1);
-        this.viewTasks(this.page);
+        this.getListWithPageURL();
       }
     },
   },
   async mounted() {
     this.$store.commit(SET_LOADING, true);
-    this.projectId = this.$route.params.project_id.toString();
-    await ProjectService.getProjectDetail(this.projectId);
-    await this.viewTasks(this.page);
+    this.getListWithPageURL();
     const employees: any = await ProjectService.getProjectEmployee(
-      this.projectId
+      this.project.id
     );
     this.getList(employees, this.listEmployee, "name");
     const backlogs = await BacklogService.getListBacklog(
       DEFAULT_PAGE,
       0,
-      this.projectId
+      this.project.id
     );
     this.getList(backlogs.backlogs.data, this.listBacklog, "backlog_title");
     this.$store.commit(SET_CANCEL_LOADING, false);
   },
   methods: {
+    getListWithPageURL() {
+      this.page = Number(this.$route.query.page || 1);
+      this.viewTasks(this.page);
+    },
     async viewTasks(page: number) {
       const data = {
         project_id: this.project.id,
@@ -154,7 +154,7 @@ export default defineComponent({
       width: 5%;
     }
     .column-title {
-      width: 35%;
+      width: 25%;
     }
     .column-status,
     .column-assignee,

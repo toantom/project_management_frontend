@@ -20,3 +20,4 @@ export const API_BACKLOG_DETAIL = "/backlogs/<backlog_id>";
 ///tasks
 export const API_TASKS = "/tasks";
 export const API_TASKS_DETAIL = "/tasks/<task_id>";
+export const API_TASK_UPDATE_BY_FIELD = "/tasks/<task_id>/update_by_field";

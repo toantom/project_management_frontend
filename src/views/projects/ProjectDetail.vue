@@ -64,7 +64,7 @@
     v-if="isShowEditProject"
     @close="isShowEditProject = false"
     :project-detail="projectDetail"
-    :project-id="projectId"
+    :project-id="project.id"
     @updateProject="updateProjectInfo"
   />
 </template>
@@ -79,13 +79,15 @@ import ProjectService from "@/services/project.service";
 import UserService from "@/common/user.service";
 //type and constants
 import { PROJECT_STATUS, USER_ROLE_EMPLOYEE } from "@/common/constants";
-import { SET_LOADING } from "@/store/mutations.types";
+import { SET_CANCEL_LOADING, SET_LOADING } from "@/store/mutations.types";
+import { mapGetters } from "vuex";
+import { Option } from "@/views/projects/type";
 export default defineComponent({
   name: "ProjectDetail",
   data() {
     return {
       projectDetail: {} as any,
-      projectPM: [] as string[],
+      projectPM: [] as Option[],
       PROJECT_STATUS,
       isManager: false,
       isShowEditProject: false,
@@ -95,11 +97,14 @@ export default defineComponent({
     ProjectMemberSpan,
     ProjectCreateModal,
   },
+  computed: {
+    ...mapGetters(["project"]),
+  },
   async mounted() {
     this.$store.commit(SET_LOADING, true);
     await this.getProjectDetail();
     this.isManager = UserService.isManagerRole();
-    this.$store.commit(SET_LOADING, false);
+    this.$store.commit(SET_CANCEL_LOADING, false);
   },
   methods: {
     updateProjectInfo(data: any) {
@@ -113,7 +118,7 @@ export default defineComponent({
         this.projectDetail = response.project;
         this.projectDetail.employees = [];
         response.members.forEach((member) => {
-          const option: any = {
+          const option: Option = {
             value: member.id,
             label: member.name,
           };
