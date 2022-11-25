@@ -71,11 +71,11 @@
             </div>
           </div>
           <div class="col-md-6 col-12">
-            <label for="accountable" class="form-label"> Accountable </label>
+            <label for="accountable" class="form-label"> Reviewer </label>
             <dropdown-base
               :id="'accountable'"
               :options="listEmployee"
-              :placeholder="'Choose Accountable'"
+              :placeholder="'Choose Reviewer'"
               v-model="task.accountable_id"
               :class="errors.errors?.accountable_id ? 'is-invalid' : ''"
             />
@@ -110,7 +110,6 @@
                   type="date"
                   class="form-control"
                   id="startDate"
-                  :min="minStart"
                   v-model="task.start_date"
                   :class="errors.errors?.start_date ? 'is-invalid' : ''"
                 />
@@ -208,15 +207,8 @@ import TaskService from "@/services/task.service";
 export default defineComponent({
   name: "TaskCreateModal",
   data() {
-    const vn_datetime_str = new Date().toLocaleDateString("vn").split("/");
-    const minStartDay = `${vn_datetime_str[2]}-${vn_datetime_str[1]}-${
-      vn_datetime_str[0].length === 1
-        ? "0" + vn_datetime_str[0]
-        : vn_datetime_str[0]
-    }`;
     return {
       open: true,
-      minStart: minStartDay,
       task: {
         task_title: "",
         task_content: "",
@@ -245,7 +237,7 @@ export default defineComponent({
     CKEditorBase,
     DropdownBase,
   },
-  emits: ["close"],
+  emits: ["close", "createTask"],
   computed: {
     ...mapGetters(["user", "errors"]),
     validate(): boolean {
@@ -300,6 +292,7 @@ export default defineComponent({
         progress: task.progress || 0,
         project_id: task.project_id,
         status: 1,
+        spend_time: null,
       };
     },
     async save() {
@@ -309,6 +302,7 @@ export default defineComponent({
           const toast = useToast();
           toast.success("Create Task Successful");
           this.open = false;
+          this.$emit("createTask");
         }
       });
     },

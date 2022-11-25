@@ -13,7 +13,12 @@
     </template>
     <template #item="{ element }">
       <div class="list-group-item">
-        <span>{{ element.id }}</span>
+        <router-link
+          :to="{ name: 'TaskDetail', params: { task_id: element.id } }"
+          class="task-link"
+        >
+          {{ element.id }}
+        </router-link>
         {{ element.task_title }}
       </div>
     </template>
@@ -48,3 +53,18 @@ export default defineComponent({
   },
 });
 </script>
+
+<style lang="scss" scoped>
+.list-group {
+  .list-group-item[data-draggable="true"] {
+    cursor: move;
+    display: flex;
+  }
+  .task-link {
+    width: 50px;
+    &:hover {
+      text-decoration: underline !important;
+    }
+  }
+}
+</style>

@@ -10,6 +10,7 @@
     @ok="save"
     @hidden="$emit('close')"
     @cancel="open = false"
+    :isLoading="isLoading"
   >
     <form class="row g-3">
       <div class="col-lg-4 col-md-6">
@@ -121,7 +122,6 @@
           type="date"
           class="form-control"
           id="start-date"
-          :min="minStart"
           v-model="project.start_date"
           :class="errors.message?.start_date ? 'is-invalid' : ''"
         />
@@ -151,7 +151,6 @@
         <dropdown-base
           :id="'employee'"
           :options="listEmployee"
-          :placeholer="'Choose employee'"
           v-model="project.employees"
           :placeholder="'Choose Employee'"
           :closeOnSelect="false"
@@ -191,20 +190,13 @@ export default defineComponent({
     DropdownBase,
     CKEditorBase,
   },
-  emits: ["close", "updateProject"],
+  emits: ["close", "updateProject", "createProject"],
   data() {
-    const vn_datetime_str = new Date().toLocaleDateString("vn").split("/");
-    const minStartDay = `${vn_datetime_str[2]}-${vn_datetime_str[1]}-${
-      vn_datetime_str[0].length === 1
-        ? "0" + vn_datetime_str[0]
-        : vn_datetime_str[0]
-    }`;
     return {
-      open: false,
+      open: true,
       PRIORITY,
       PROJECT_TYPE,
       PROJECT_PUBLIC,
-      minStart: minStartDay,
       project: {
         title: "",
         short_name: "",
@@ -221,6 +213,7 @@ export default defineComponent({
       } as any,
       listEmployee: [] as object[],
       listManager: [] as object[],
+      isLoading: false,
     };
   },
   props: {
@@ -228,6 +221,7 @@ export default defineComponent({
     projectId: String,
   },
   async mounted() {
+    this.isLoading = true;
     // eslint-disable-next-line
     const employees: any = await ProjectService.getEmployeeList();
     this.getListMember(employees, this.listEmployee);
@@ -250,6 +244,8 @@ export default defineComponent({
             this.project.project_manager = option;
           }
         });
+        this.project.project_description =
+          this.project.project_description ?? "";
         this.project.project_type = PROJECT_TYPE.find(
           (item: any) => item.value === this.project.project_type
         );
@@ -259,9 +255,9 @@ export default defineComponent({
         this.project.priority = PRIORITY.find(
           (item: any) => item.value === this.project.priority
         );
-        this.open = true;
       }
     }
+    this.isLoading = false;
   },
   beforeUnmount() {
     if (this.errors) {
@@ -335,7 +331,7 @@ export default defineComponent({
                 const toast = useToast();
                 toast.success("Update Project Successful");
                 this.open = false;
-                this.$emit("updateProject", this.project);
+                this.$emit("updateProject");
               }
             }
           )
@@ -344,6 +340,7 @@ export default defineComponent({
               const toast = useToast();
               toast.success("Create Project Successful");
               this.open = false;
+              this.$emit("createProject");
             }
           });
     },

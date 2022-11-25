@@ -8,7 +8,7 @@
           <span>{{ backlog.start_date }} - {{ backlog.end_date }}</span>
         </div>
       </div>
-      <div class="badge"><span>Backlog</span></div>
+      <div class="badge"><span>Sprint</span></div>
     </div>
     <div class="mt-5">
       <div class="progress">

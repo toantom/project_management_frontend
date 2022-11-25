@@ -57,12 +57,12 @@
             :disabled="!disabled"
             v-else
           />
-          <div
-            class="forgot-password"
-            @click="this.$router.push({ name: 'ForgotPassword' })"
-          >
-            Forgot your password ?
-          </div>
+          <!--          <div-->
+          <!--            class="forgot-password"-->
+          <!--            @click="this.$router.push({ name: 'ForgotPassword' })"-->
+          <!--          >-->
+          <!--            Forgot your password ?-->
+          <!--          </div>-->
         </div>
       </form>
       <hr class="form--separator" />

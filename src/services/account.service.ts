@@ -7,6 +7,7 @@ import ApiService from "@/common/api.service";
 import {
   API_GET_INFO_ACCOUNT,
   API_UPDATE_INFO_ACCOUNT,
+  API_UPDATE_PASSWORD,
 } from "@/common/api.constants";
 import UserService from "@/common/user.service";
 
@@ -31,6 +32,15 @@ export default {
       })
       .catch((error: AxiosError) => {
         return error.response;
+      });
+  },
+  updatePassword(data: object): Promise<any | void> {
+    return ApiService.put(API_UPDATE_PASSWORD, data)
+      .then((response: AxiosResponse) => {
+        return response.data;
+      })
+      .catch((error: AxiosError) => {
+        return error.response?.data;
       });
   },
 };

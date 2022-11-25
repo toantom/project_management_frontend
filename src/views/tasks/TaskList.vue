@@ -16,8 +16,10 @@
       </button>
     </div>
     <div>
-      <table class="table table-bordered table-hover table-responsive">
-        <thead class="table-secondary">
+      <table
+        class="table table-bordered table-hover table-responsive table-striped"
+      >
+        <thead>
           <tr>
             <th class="column-id">ID</th>
             <th class="column-title">Title</th>
@@ -46,6 +48,7 @@
   <task-create-modal
     v-if="isShowTaskCreate"
     @close="isShowTaskCreate = false"
+    @createTask="getListWithPageURL"
   />
 </template>
 
@@ -78,6 +81,7 @@ export default defineComponent({
       tasks: [] as any,
       listEmployee: [] as object[],
       listBacklog: [] as object[],
+      projectId: "",
     };
   },
   components: {
@@ -90,34 +94,38 @@ export default defineComponent({
   },
   watch: {
     $route(to) {
-      if (to.name === "WorkPackages") {
+      if (to.name === "ProjectActivities") {
         this.getListWithPageURL();
       }
     },
   },
   async mounted() {
     this.$store.commit(SET_LOADING, true);
-    this.getListWithPageURL();
+    this.projectId = this.$route.params.project_id.toString();
     const employees: any = await ProjectService.getProjectEmployee(
-      this.project.id
+      this.projectId
     );
     this.getList(employees, this.listEmployee, "name");
     const backlogs = await BacklogService.getListBacklog(
       DEFAULT_PAGE,
       0,
-      this.project.id
+      this.projectId
     );
     this.getList(backlogs.backlogs.data, this.listBacklog, "backlog_title");
+    this.getListWithPageURL();
+
     this.$store.commit(SET_CANCEL_LOADING, false);
   },
   methods: {
     getListWithPageURL() {
+      this.$store.commit(SET_LOADING, true);
       this.page = Number(this.$route.query.page || 1);
       this.viewTasks(this.page);
+      this.$store.commit(SET_CANCEL_LOADING, false);
     },
     async viewTasks(page: number) {
       const data = {
-        project_id: this.project.id,
+        project_id: this.projectId,
         page: page,
         limit: this.limit,
       };

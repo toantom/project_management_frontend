@@ -8,8 +8,6 @@
 
 body {
   box-sizing: border-box;
-}
-#app {
   background-color: rgb(237 237 237);
 }
 #body-pd {
@@ -33,4 +31,10 @@ body {
 }
 .required-input {
   color: var(--bs-danger);
+}
+.fs-10 {
+  font-size: 10px;
+}
+.fs-12 {
+  font-size: 12px;
 }
