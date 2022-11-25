@@ -67,7 +67,7 @@
             <router-link
               :to="{
                 name: 'ProjectDetail',
-                params: { project_id: project.id },
+                params: { project_id: project?.id },
               }"
               class="nav_link-sidebar"
               :class="ProjectDetail && 'active'"
@@ -88,20 +88,20 @@
             <router-link
               :to="{ name: 'ProjectBacklog' }"
               class="nav_link-sidebar"
-              :class="projectBacklog && 'active'"
-              title="Project Backlog"
+              :class="projectSprints && 'active'"
+              title="Project Sprints"
             >
               <i class="bx bx-book-content nav_icon-sidebar"></i>
-              <span class="nav_name">Backlogs</span>
+              <span class="nav_name">Sprints</span>
             </router-link>
             <router-link
-              :to="{ name: 'WorkPackages' }"
+              :to="{ name: 'ProjectActivities' }"
               class="nav_link-sidebar"
-              :class="projectWorkPackages && 'active'"
-              title="Project Work Packages"
+              :class="projectActivities && 'active'"
+              title="Project Activities"
             >
               <i class="bx bx-briefcase-alt-2 nav_icon-sidebar"></i>
-              <span class="nav_name">Work packages</span>
+              <span class="nav_name">Activities</span>
             </router-link>
             <!--            <a-->
             <!--              href="#"-->
@@ -189,11 +189,11 @@ export default defineComponent({
     projectDashboard(): boolean {
       return this.$route.name === "ProjectDashboard";
     },
-    projectBacklog(): boolean {
+    projectSprints(): boolean {
       return this.$route.name === "ProjectBacklog";
     },
-    projectWorkPackages(): boolean {
-      return this.$route.name === "WorkPackages";
+    projectActivities(): boolean {
+      return this.$route.name === "ProjectActivities";
     },
     projectWiki(): boolean {
       return this.$route.name === "ProjectWiki";
@@ -205,10 +205,10 @@ export default defineComponent({
   mounted() {
     this.isEmployee = !UserService.isAdminType();
     if (
-      this.$route.fullPath.includes("projects/") &&
+      this.$route.fullPath.match(/\/projects\/.+/g) &&
       !Object.keys(this.project).length
     ) {
-      ProjectService.getProjectDetail(this.$route.params.project_id.toString());
+      ProjectService.getProjectInfo(this.$route.params.project_id.toString());
     }
   },
   methods: {

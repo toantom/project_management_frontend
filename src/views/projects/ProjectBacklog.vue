@@ -1,7 +1,7 @@
 <template>
   <div class="project-backlog px-2 px-sm-4">
     <div class="d-flex align-items-center justify-content-between mb-4">
-      <h1 class="m-0">Backlogs</h1>
+      <h1 class="m-0">Sprints</h1>
       <div v-if="isManager">
         <button
           type="button"
@@ -12,7 +12,7 @@
             <i class="bx bx-plus" />
           </template>
           <template class="d-none d-sm-block">
-            <i class="bx bx-plus pe-1" /> Create New Backlog
+            <i class="bx bx-plus pe-1" /> Create New sprint
           </template>
         </button>
       </div>
@@ -60,6 +60,7 @@ export default defineComponent({
       isManager: false,
       isShowBacklogCreate: false,
       componentKey: 0,
+      projectId: "",
     };
   },
   components: {
@@ -79,6 +80,7 @@ export default defineComponent({
   },
   async mounted() {
     this.$store.commit(SET_LOADING, true);
+    this.projectId = this.$route.params.project_id.toString();
     this.isManager = UserService.isManagerRole();
     this.getListWithPageURL();
     if (this.backlogs) {
@@ -94,7 +96,7 @@ export default defineComponent({
       const response = await BacklogService.getListBacklog(
         page,
         6,
-        this.project.id
+        this.projectId
       );
 
       if (response) {

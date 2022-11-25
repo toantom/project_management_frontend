@@ -25,8 +25,11 @@
             />
           </div>
           <div class="modal-body">
-            <slot></slot>
+            <a-spin :spinning="isLoading">
+              <slot></slot>
+            </a-spin>
           </div>
+
           <div class="modal-footer">
             <button
               v-if="secondLabel"
@@ -73,6 +76,7 @@ export default defineComponent({
     open: { type: Boolean, default: false },
     titleSize: { type: String, default: "" },
     isCancel: { type: Boolean, default: true },
+    isLoading: { type: Boolean, default: false },
   },
   emits: [
     "update:open",

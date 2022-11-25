@@ -48,7 +48,7 @@
             role="tabpanel"
             aria-labelledby="change-password-tab"
           >
-            Change password
+            <change-password />
           </div>
         </div>
       </div>
@@ -59,11 +59,13 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import ProfileEdit from "@/components/account/ProfileEdit.vue";
+import ChangePassword from "@/components/account/ChangePassword.vue";
 
 export default defineComponent({
   name: "AccountView",
   components: {
     ProfileEdit,
+    ChangePassword,
   },
 });
 </script>

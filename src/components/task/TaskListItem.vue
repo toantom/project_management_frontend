@@ -168,11 +168,14 @@ export default defineComponent({
       this.taskEdit.status = TASK_STATUS.find(
         (item: any) => item.value === this.task?.status
       );
+      this.taskEdit.assignee_id = this.task?.assignee_id
+        ? {
+            value: this.task?.assignee_id?.id,
+            label: this.task?.assignee_id?.name,
+          }
+        : null;
       this.taskEdit.backlog_id = this.listBacklog?.find(
         (item: any) => item.value === this.task?.backlog_id
-      );
-      this.taskEdit.assignee_id = this.listEmployee?.find(
-        (item: any) => item.value === this.task?.assignee_id
       );
     },
     toggleChildren() {
@@ -192,9 +195,16 @@ export default defineComponent({
       margin: 0;
     }
   }
-  ::v-deep .dropdown-input {
+  :deep(.dropdown-input) {
     .vs__clear {
       display: none;
+    }
+    .vs__selected-options {
+      flex-wrap: nowrap;
+    }
+    .vs__search {
+      padding: 0;
+      border: 0;
     }
   }
   .task-link:hover {

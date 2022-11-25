@@ -58,6 +58,7 @@
   <project-create-modal
     v-if="isShowProjectCreate"
     @close="isShowProjectCreate = false"
+    @createProject="getListWithPageURL()"
   />
 </template>
 

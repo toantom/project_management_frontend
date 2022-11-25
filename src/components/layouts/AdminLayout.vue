@@ -1,21 +1,20 @@
 <template>
   <header-base />
-  <loading-base v-if="isLoading" />
-  <div id="body-pd" class="pt-2 pt-sm-4 ps-0 mx-auto" v-show="!isLoading">
-    <router-view />
+  <div id="body-pd" class="pt-2 pt-sm-4 ps-0 mx-auto">
+    <a-spin :spinning="isLoading">
+      <router-view />
+    </a-spin>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
 import HeaderBase from "@/components/base/HeaderBase.vue";
-import LoadingBase from "@/components/base/LoadingBase.vue";
 import { mapGetters } from "vuex";
 export default defineComponent({
   name: "AdminLayout",
   components: {
     HeaderBase,
-    LoadingBase,
   },
   computed: {
     ...mapGetters(["isLoading"]),

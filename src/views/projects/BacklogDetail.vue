@@ -1,7 +1,14 @@
 <template>
   <div class="backlog-detail px-2 px-sm-4">
     <div class="d-flex align-items-center justify-content-between mb-4">
-      <h2 class="m-0">{{ backlog.backlog_title }}</h2>
+      <div>
+        <h2 class="m-0">
+          {{ backlog.backlog_title }}
+        </h2>
+        <span class="fs-12 fw-normal">
+          Updated by: {{ backlog.updated_by?.name }} at {{ backlog.updated_at }}
+        </span>
+      </div>
       <div v-if="isManager">
         <button
           type="button"

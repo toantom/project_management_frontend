@@ -1,6 +1,6 @@
 <template>
   <modal-base
-    :title="'Create New Backlog'"
+    :title="'Create New Sprint'"
     :primary-label="this.backlogDetail ? 'Update' : 'Create'"
     :second-label="'Cancel'"
     :close-button="true"
@@ -14,7 +14,7 @@
     <form class="row g-3">
       <div class="col-12">
         <label for="project-name" class="form-label">
-          Specify you backlog name <span class="required-input">*</span>
+          Specify you sprint name <span class="required-input">*</span>
         </label>
         <input
           type="text"

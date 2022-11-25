@@ -4,7 +4,7 @@
     v-model="editorData"
     :config="editorConfig"
     tag-name="textarea"
-  ></ckeditor>
+  />
 </template>
 
 <script lang="ts">

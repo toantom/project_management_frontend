@@ -18,7 +18,7 @@
       </div>
     </div>
     <div class="row w-100 mt-4 mx-0">
-      <div class="tab-info col-lg-4 col-md-6 col-sm-12">
+      <div class="tab-info col-md-6 col-sm-12">
         <div class="card">
           <div class="card-body">
             <div class="card-title">Project Description</div>
@@ -26,7 +26,7 @@
           </div>
         </div>
       </div>
-      <div class="tab-info col-lg-4 col-md-6 col-sm-12">
+      <div class="tab-info col-md-6 col-sm-12">
         <div class="card">
           <div class="card-body">
             <div class="card-title">Project Status</div>
@@ -34,7 +34,7 @@
           </div>
         </div>
       </div>
-      <div class="tab-info col-lg-4 col-md-6 col-sm-12">
+      <div class="tab-info col-md-6 col-sm-12">
         <div class="card">
           <div class="card-body">
             <div class="card-title">Projects members</div>
@@ -51,10 +51,22 @@
           </div>
         </div>
       </div>
+      <div class="tab-info col-md-6 col-sm-12">
+        <div class="card">
+          <div class="card-body">
+            <div class="card-title">task overview</div>
+            <project-pie-chart :project-id="projectId" />
+          </div>
+        </div>
+      </div>
       <div class="tab-info col-sm-12">
         <div class="card">
           <div class="card-body">
-            <div class="card-title">Work packages overview</div>
+            <div class="card-title">Activity overview</div>
+            <project-chart
+              :project-id="projectId"
+              :employees="projectDetail.employees"
+            />
           </div>
         </div>
       </div>
@@ -64,7 +76,7 @@
     v-if="isShowEditProject"
     @close="isShowEditProject = false"
     :project-detail="projectDetail"
-    :project-id="project.id"
+    :project-id="project?.id.toString()"
     @updateProject="updateProjectInfo"
   />
 </template>
@@ -74,6 +86,8 @@ import { defineComponent } from "vue";
 //components
 import ProjectMemberSpan from "@/components/project/ProjectMemberSpan.vue";
 import ProjectCreateModal from "@/components/project/ProjectCreateModal.vue";
+import ProjectChart from "@/components/project/ProjectChart.vue";
+import ProjectPieChart from "@/components/project/ProjectPieChart.vue";
 //services
 import ProjectService from "@/services/project.service";
 import UserService from "@/common/user.service";
@@ -91,14 +105,20 @@ export default defineComponent({
       PROJECT_STATUS,
       isManager: false,
       isShowEditProject: false,
+      projectId: "",
     };
   },
   components: {
     ProjectMemberSpan,
     ProjectCreateModal,
+    ProjectChart,
+    ProjectPieChart,
   },
   computed: {
     ...mapGetters(["project"]),
+  },
+  created() {
+    this.projectId = this.$route.params.project_id.toString();
   },
   async mounted() {
     this.$store.commit(SET_LOADING, true);
@@ -107,9 +127,9 @@ export default defineComponent({
     this.$store.commit(SET_CANCEL_LOADING, false);
   },
   methods: {
-    updateProjectInfo(data: any) {
-      this.projectDetail = data;
-      this.projectPM = [data.project_manager];
+    updateProjectInfo() {
+      this.getProjectDetail();
+      this.isShowEditProject = false;
     },
     async getProjectDetail() {
       const projectId = this.$route.params.project_id.toString();
@@ -117,6 +137,7 @@ export default defineComponent({
       if (response) {
         this.projectDetail = response.project;
         this.projectDetail.employees = [];
+        this.projectPM = [];
         response.members.forEach((member) => {
           const option: Option = {
             value: member.id,
