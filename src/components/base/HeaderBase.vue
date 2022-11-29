@@ -208,7 +208,7 @@ export default defineComponent({
       this.$route.fullPath.match(/\/projects\/.+/g) &&
       !Object.keys(this.project).length
     ) {
-      ProjectService.getProjectInfo(this.$route.params.project_id.toString());
+      ProjectService.getProjectInfo(this.$route.params?.project_id.toString());
     }
   },
   methods: {

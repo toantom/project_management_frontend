@@ -183,6 +183,11 @@
           </div>
         </div>
       </div>
+      <div class="col-12">
+        <label class="form-label"> FILES </label>
+        <hr class="form--separator" />
+        <task-update-file />
+      </div>
     </form>
   </modal-base>
 </template>
@@ -192,6 +197,7 @@ import { defineComponent } from "vue";
 import ModalBase from "@/components/base/ModalBase.vue";
 import DropdownBase from "@/components/base/DropdownBase.vue";
 import CKEditorBase from "@/components/base/CKEditorBase.vue";
+import TaskUpdateFile from "@/components/task/TaskUpdateFile.vue";
 import { TASK_TYPE, PRIORITY, DEFAULT_PAGE } from "@/common/constants";
 import { mapGetters } from "vuex";
 import ProjectService from "@/services/project.service";
@@ -236,6 +242,7 @@ export default defineComponent({
     ModalBase,
     CKEditorBase,
     DropdownBase,
+    TaskUpdateFile,
   },
   emits: ["close", "createTask"],
   computed: {
