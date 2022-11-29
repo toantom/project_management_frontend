@@ -1,6 +1,6 @@
 <template>
   <modal-base
-    :title="'Create New Sprint'"
+    :title="this.backlogDetail ? 'Update Sprint' : 'Create New Sprint'"
     :primary-label="this.backlogDetail ? 'Update' : 'Create'"
     :second-label="'Cancel'"
     :close-button="true"

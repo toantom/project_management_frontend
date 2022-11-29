@@ -78,6 +78,7 @@ import {
   USER_STATUS_INACTIVE,
 } from "@/common/constants";
 import { useToast } from "vue-toastification";
+import { SET_CANCEL_LOADING, SET_LOADING } from "@/store/mutations.types";
 
 export default defineComponent({
   name: "AdminPage",
@@ -97,7 +98,11 @@ export default defineComponent({
     };
   },
   async mounted() {
+    this.$store.commit(SET_LOADING, true);
     await this.getListEmployee(this.page);
+    if (this.employees) {
+      this.$store.commit(SET_CANCEL_LOADING, false);
+    }
   },
   watch: {
     $route(to) {
