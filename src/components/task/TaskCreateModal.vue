@@ -141,11 +141,11 @@
         <hr class="form--separator" />
         <div class="row">
           <div class="col-md-6 col-12">
-            <label for="backlog" class="form-label"> Backlog </label>
+            <label for="backlog" class="form-label">Sprint</label>
             <dropdown-base
               :id="'backlog'"
               :options="listBacklog"
-              :placeholder="'Choose Backlog'"
+              :placeholder="'Choose Sprint'"
               v-model="task.backlog_id"
               :class="errors.errors?.backlog_id ? 'is-invalid' : ''"
             />

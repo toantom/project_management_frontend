@@ -293,13 +293,13 @@
             <div class="row">
               <div class="col-md-6 col-12">
                 <div class="attribute">
-                  <div class="key">Backlog</div>
+                  <div class="key">Sprint</div>
                   <div class="value">
                     <dropdown-base
                       v-if="taskEdit.backlog_id"
                       :id="'backlog'"
                       :options="listBacklog"
-                      :placeholder="'Choose Backlog'"
+                      :placeholder="'Choose Sprint'"
                       v-model="task.backlog_id"
                       @change="changeAttribute('backlog_id')"
                     />
