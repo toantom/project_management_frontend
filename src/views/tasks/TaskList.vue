@@ -1,7 +1,7 @@
 <template>
   <div class="task-list px-2 px-sm-4">
     <div class="d-flex align-items-center justify-content-between mb-4">
-      <h1 class="m-0">Work Package</h1>
+      <h1 class="m-0">Activities</h1>
       <button
         type="button"
         class="btn btn-primary d-flex align-items-center"
@@ -25,7 +25,7 @@
             <th class="column-title">Title</th>
             <th class="column-status">Status</th>
             <th class="column-assignee">Assignee</th>
-            <th class="column-backlog">Backlog</th>
+            <th class="column-backlog">Sprint</th>
             <th class="column-date">Start Date</th>
             <th class="column-date">End Date</th>
           </tr>

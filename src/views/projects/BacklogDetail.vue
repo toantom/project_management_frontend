@@ -2,9 +2,17 @@
   <div class="backlog-detail px-2 px-sm-4">
     <div class="d-flex align-items-center justify-content-between mb-4">
       <div>
-        <h2 class="m-0">
-          {{ backlog.backlog_title }}
-        </h2>
+        <div class="title">
+          <div class="back-button w-10 me-2">
+            <router-link :to="{ name: 'ProjectBacklog' }">
+              <i class="bx bx-arrow-back" />
+            </router-link>
+          </div>
+          <h2 class="m-0">
+            {{ backlog.backlog_title }}
+          </h2>
+        </div>
+
         <span class="fs-12 fw-normal">
           Updated by: {{ backlog.updated_by?.name }} at {{ backlog.updated_at }}
         </span>
@@ -143,3 +151,18 @@ export default defineComponent({
   },
 });
 </script>
+
+<style lang="scss" scoped>
+.backlog-detail {
+  .title {
+    display: flex;
+    align-items: center;
+  }
+  .back-button {
+    padding: 5px 20px;
+    background: #f8f8f8;
+    color: #222222;
+    border: 1px solid #dddddd;
+  }
+}
+</style>

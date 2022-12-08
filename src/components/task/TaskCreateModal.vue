@@ -141,11 +141,11 @@
         <hr class="form--separator" />
         <div class="row">
           <div class="col-md-6 col-12">
-            <label for="backlog" class="form-label"> Backlog </label>
+            <label for="backlog" class="form-label">Sprint</label>
             <dropdown-base
               :id="'backlog'"
               :options="listBacklog"
-              :placeholder="'Choose Backlog'"
+              :placeholder="'Choose Sprint'"
               v-model="task.backlog_id"
               :class="errors.errors?.backlog_id ? 'is-invalid' : ''"
             />
@@ -186,7 +186,7 @@
       <div class="col-12">
         <label class="form-label"> FILES </label>
         <hr class="form--separator" />
-        <task-update-file />
+        <task-update-file ref="uploadFile" />
       </div>
     </form>
   </modal-base>
@@ -306,6 +306,8 @@ export default defineComponent({
       const data = this.getPostData();
       await TaskService.createTask(data).then((res) => {
         if (res.result === "ok") {
+          const files = this.$refs.uploadFile as any;
+          this.uploadFileTask(files.fileList);
           const toast = useToast();
           toast.success("Create Task Successful");
           this.open = false;
@@ -321,6 +323,15 @@ export default defineComponent({
           list.push(option);
         });
       }
+    },
+    uploadFileTask(files: any) {
+      if (!files) return;
+      let formData = new FormData();
+
+      files.forEach((file, index) => {
+        formData.append("files[" + index + "]", file);
+      });
+      TaskService.uploadTaskFile(formData);
     },
   },
 });

@@ -1,7 +1,11 @@
 <template>
   <div class="task-detail px-2 px-sm-4">
-    <div class="mb-2">
-      <div class="back-button w-10"></div>
+    <div class="mb-4 d-flex align-items-center">
+      <div class="back-button w-10 me-2">
+        <router-link :to="{ name: 'ProjectActivities' }">
+          <i class="bx bx-arrow-back" />
+        </router-link>
+      </div>
       <div class="task-type w-10"></div>
       <div class="title w-80">
         <input
@@ -11,7 +15,7 @@
           v-if="taskEdit.task_title"
           @keyup.enter="changeAttribute('task_title')"
         />
-        <h3 v-else class="task-label" @click="taskEdit.task_title = true">
+        <h3 v-else class="task-label mb-0" @click="taskEdit.task_title = true">
           {{ task.task_title }}
         </h3>
       </div>
@@ -289,13 +293,13 @@
             <div class="row">
               <div class="col-md-6 col-12">
                 <div class="attribute">
-                  <div class="key">Backlog</div>
+                  <div class="key">Sprint</div>
                   <div class="value">
                     <dropdown-base
                       v-if="taskEdit.backlog_id"
                       :id="'backlog'"
                       :options="listBacklog"
-                      :placeholder="'Choose Backlog'"
+                      :placeholder="'Choose Sprint'"
                       v-model="task.backlog_id"
                       @change="changeAttribute('backlog_id')"
                     />
@@ -348,10 +352,25 @@
             <i class="bx bxs-chevron-down"></i>
           </h4>
           <hr class="separator" />
-          <div class="collapse show" id="collapseFiles">Files</div>
+
+          <div class="collapse show" id="collapseFiles">
+            <div v-for="file in taskFile" :key="file" class="mb-1 file-link">
+              <a :href="customURL(file.file_path)" target="_blank">
+                {{ file.file_name }}
+              </a>
+              <i class="bx bx-trash-alt" @click="removeFile(file)"></i>
+            </div>
+            <task-update-file
+              ref="uploadFile"
+              :is-update="true"
+              @uploadFile="uploadFile"
+            />
+          </div>
         </div>
       </div>
-      <div class="task-activity col-12 col-md-4"></div>
+      <div class="task-activity col-12 col-md-4">
+        <TaskComment :task-id="taskId" />
+      </div>
     </div>
   </div>
 </template>
@@ -360,9 +379,16 @@
 import { defineComponent } from "vue";
 import DropdownBase from "@/components/base/DropdownBase.vue";
 import CKEditorBase from "@/components/base/CKEditorBase.vue";
+import TaskUpdateFile from "@/components/task/TaskUpdateFile.vue";
+import TaskComment from "@/components/task/TaskComment.vue";
 import { SET_CANCEL_LOADING, SET_LOADING } from "@/store/mutations.types";
 import TaskService from "@/services/task.service";
-import { DEFAULT_PAGE, PRIORITY, TASK_STATUS } from "@/common/constants";
+import {
+  API_URL_FILE,
+  DEFAULT_PAGE,
+  PRIORITY,
+  TASK_STATUS,
+} from "@/common/constants";
 import ProjectService from "@/services/project.service";
 import { User } from "@/components/account/type";
 import { Option } from "@/views/projects/type";
@@ -375,6 +401,8 @@ export default defineComponent({
   components: {
     CKEditorBase,
     DropdownBase,
+    TaskUpdateFile,
+    TaskComment,
   },
   data() {
     return {
@@ -393,6 +421,7 @@ export default defineComponent({
       },
       // eslint-disable-next-line
       task: {} as any,
+      taskFile: {} as any,
       origin: {} as any,
       projectId: "",
       taskId: "",
@@ -421,6 +450,42 @@ export default defineComponent({
     },
   },
   methods: {
+    async uploadFile() {
+      const files = this.$refs.uploadFile as any;
+      if (!files.fileList) return;
+      let formData = new FormData();
+
+      files.fileList.forEach((file, index) => {
+        formData.append("files[" + index + "]", file);
+      });
+      const res = await TaskService.uploadTaskFileDetail(
+        formData,
+        this.task.id
+      );
+      if (res.result === "ok") {
+        const toast = useToast();
+        toast.success("Upload File Successful");
+        await this.getTaskDetail();
+        files.fileList = [];
+      }
+    },
+    async removeFile(file: any) {
+      if (!confirm("Are you sure want to remove this file ?")) {
+        return;
+      }
+      const data = {
+        id: file.id,
+      };
+      const res = await TaskService.removeFile(data, this.task.id);
+      if (res.result === "ok") {
+        const toast = useToast();
+        toast.success("Remove File Successful");
+        this.taskFile = this.taskFile.filter((item) => item.id !== file.id);
+      }
+    },
+    customURL(file_path: string) {
+      return API_URL_FILE + file_path;
+    },
     statusColor(status: number) {
       switch (status) {
         case 2:
@@ -444,6 +509,7 @@ export default defineComponent({
       const response = await TaskService.viewTaskDetail(data, this.taskId);
       if (response) {
         this.task = response.task;
+        this.taskFile = response.task_file;
         this.task.priority = PRIORITY.find(
           // eslint-disable-next-line
           (item: any) => item.value === this.task.priority
@@ -511,12 +577,13 @@ export default defineComponent({
     async openDropdown(dropdown: string) {
       this.taskEdit[dropdown] = true;
       const arr = ["assignee_id", "accountable_id"];
-      if (arr.includes(dropdown)) {
+      if (arr.includes(dropdown) && this.listEmployee.length === 0) {
         const employees = await ProjectService.getProjectEmployee(
           this.task.project_id
         );
         this.getList(employees, this.listEmployee, "name");
-      } else {
+      }
+      if (dropdown === "backlog_id") {
         const backlogs = await BacklogService.getListBacklog(
           DEFAULT_PAGE,
           0,
@@ -540,6 +607,25 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .task-detail {
+  .task-body {
+    padding-top: 0.5rem;
+    border-top: 1px solid #333333;
+  }
+  .task-info {
+    height: 78vh;
+    overflow: auto;
+  }
+  .task-activity {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .back-button {
+    padding: 5px 20px;
+    background: #f8f8f8;
+    color: #222222;
+    border: 1px solid #dddddd;
+  }
   input {
     background-color: rgb(237, 237, 237);
     border: 1px solid #b2b0b0;
@@ -561,6 +647,19 @@ export default defineComponent({
       }
       .value {
         width: 75%;
+      }
+    }
+  }
+  .task-part.file {
+    .file-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      &:hover {
+        background-color: #f5f5f5;
+      }
+      .bx {
+        cursor: pointer;
       }
     }
   }

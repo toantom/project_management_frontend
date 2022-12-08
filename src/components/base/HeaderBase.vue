@@ -76,15 +76,15 @@
               <i class="bx bx-info-circle nav_icon-sidebar"></i>
               <span class="nav_name">Overview</span>
             </router-link>
-            <a
-              href="#"
-              class="nav_link-sidebar"
-              :class="projectDashboard && 'active'"
-              title="Project Dashboard"
-            >
-              <i class="bx bx-grid-alt nav_icon-sidebar"></i>
-              <span class="nav_name">Dashboard</span>
-            </a>
+            <!--            <a-->
+            <!--              href="#"-->
+            <!--              class="nav_link-sidebar"-->
+            <!--              :class="projectDashboard && 'active'"-->
+            <!--              title="Project Dashboard"-->
+            <!--            >-->
+            <!--              <i class="bx bx-grid-alt nav_icon-sidebar"></i>-->
+            <!--              <span class="nav_name">Dashboard</span>-->
+            <!--            </a>-->
             <router-link
               :to="{ name: 'ProjectBacklog' }"
               class="nav_link-sidebar"
@@ -111,15 +111,15 @@
             <!--              <i class="bx bxs-book-reader nav_icon-sidebar"></i>-->
             <!--              <span class="nav_name">Wiki</span>-->
             <!--            </a>-->
-            <a
-              href="#"
-              class="nav_link-sidebar"
-              :class="projectMember && 'active'"
-              title="Project Members "
-            >
-              <i class="bx bx-group nav_icon-sidebar"></i>
-              <span class="nav_name">Members</span>
-            </a>
+            <!--            <a-->
+            <!--              href="#"-->
+            <!--              class="nav_link-sidebar"-->
+            <!--              :class="projectMember && 'active'"-->
+            <!--              title="Project Members "-->
+            <!--            >-->
+            <!--              <i class="bx bx-group nav_icon-sidebar"></i>-->
+            <!--              <span class="nav_name">Members</span>-->
+            <!--            </a>-->
           </div>
         </div>
       </nav>

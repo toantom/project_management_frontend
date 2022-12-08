@@ -26,4 +26,9 @@ export const API_BACKLOG_DETAIL = "/backlogs/<backlog_id>";
 ///tasks
 export const API_TASKS = "/tasks";
 export const API_TASKS_DETAIL = "/tasks/<task_id>";
+export const API_TASKS_UPLOAD_FILE = "/tasks/upload_file";
+export const API_TASKS_REMOVE_FILE = "/tasks/<task_id>/remove_file";
+export const API_TASKS_UPLOAD_FILE_DETAIL = "/tasks/<task_id>/upload_file";
 export const API_TASK_UPDATE_BY_FIELD = "/tasks/<task_id>/update_by_field";
+export const API_TASKS_ADD_COMMENT = "/tasks/<task_id>/add_comment";
+export const API_TASKS_VIEW_ALL_COMMENT = "/tasks/<task_id>/get_comment";
