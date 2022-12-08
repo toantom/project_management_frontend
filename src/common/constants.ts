@@ -1,4 +1,5 @@
 export const API_BASE_URL = process.env.VUE_APP_API_BASE_URL;
+export const API_URL_FILE = process.env.VUE_APP_URL_FILE;
 
 export const USER_TYPE_EMPLOYEE = 1;
 export const USER_TYPE_ADMIN = 2;
@@ -46,5 +47,16 @@ export const TASK_STATUS = [
   { value: 3, label: "Done" },
   { value: 4, label: "Close" },
 ];
+export enum HttpStatusCode {
+  ok = 200,
+  created = 201,
+  bad_request = 400,
+  expired_token = 401,
+  forbidden = 403,
+  not_found = 404,
+  method_not_allowed = 405,
+  not_accept = 406,
+  error_server = 500,
+}
 
 export const DEFAULT_PAGE = 1;

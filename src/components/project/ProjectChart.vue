@@ -23,7 +23,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { TASK_STATUS, TASK_TYPE } from "@/common/constants";
+import { TASK_TYPE } from "@/common/constants";
 import ProjectService from "@/services/project.service";
 
 export default defineComponent({
@@ -33,13 +33,13 @@ export default defineComponent({
       series: [
         {
           name: "Open",
-          data: [44, 55, 41, 37],
+          data: [],
         },
         {
           name: "Close",
-          data: [53, 32, 33, 52],
+          data: [],
         },
-      ],
+      ] as any,
       chartOptions: {
         chart: {
           type: "bar",
@@ -122,7 +122,17 @@ export default defineComponent({
         data
       );
       if (response) {
-        console.log(response);
+        this.series[0].data = [];
+        this.series[1].data = [];
+        if (chartType === "assignee") {
+          this.series = response.series;
+          this.chartOptions.xaxis.categories = response.xaxis;
+        } else {
+          for (let i = 1; i <= 4; i++) {
+            this.series[0].data.push(response.series[0].data[i] ?? 0);
+            this.series[1].data.push(response.series[1].data[i] ?? 0);
+          }
+        }
       }
       setTimeout(() => {
         this.isShowChart = true;
@@ -136,6 +146,6 @@ export default defineComponent({
 .chart-loading {
   text-align: center;
   border-radius: 4px;
-  padding: 100px 0;
+  padding: 114px 0;
 }
 </style>
